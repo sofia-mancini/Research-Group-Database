@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/sofiamancini.rhody.dev/public_html/
+    - /bin/cp -R * $DEPLOYPATH
