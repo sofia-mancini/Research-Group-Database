@@ -12,6 +12,7 @@ START TRANSACTION;
 SET time_zone = "+00:00";
 
 
+
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -1228,3 +1229,44 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- --------------------------------------------------------
+-- View 1: member_contact_view
+-- Only research group members can see emails
+-- --------------------------------------------------------
+CREATE VIEW `member_contact_view` AS
+SELECT 
+    p.person_id,
+    p.name,
+    p.email,
+    pg.role,
+    rg.name AS group_name
+FROM person p
+JOIN person_group pg ON p.person_id = pg.person_id
+JOIN research_group rg ON pg.group_id = rg.group_id;
+
+-- --------------------------------------------------------
+-- View 2: project_access_view
+-- Project Leads see all projects,
+-- everyone else only sees their assigned projects
+-- --------------------------------------------------------
+CREATE VIEW `project_access_view` AS
+SELECT 
+    p.person_id,
+    p.name,
+    pm.role AS project_role,
+    proj.project_id,
+    proj.title,
+    proj.description,
+    proj.status,
+    proj.start_date,
+    proj.end_date
+FROM person p
+JOIN project_member pm ON p.person_id = pm.person_id
+JOIN project proj ON (
+    -- Project Leads see all projects
+    pm.role = 'Project Lead'
+    OR
+    -- Everyone else only sees their assigned projects
+    proj.project_id = pm.project_id
+);
