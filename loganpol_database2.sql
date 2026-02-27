@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Feb 20, 2026 at 03:06 PM
+-- Generation Time: Feb 27, 2026 at 12:49 PM
 -- Server version: 5.7.44-48
 -- PHP Version: 8.3.26
 
@@ -20,6 +20,71 @@ SET time_zone = "+00:00";
 --
 -- Database: `loganpol_database2`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `author`
+--
+
+CREATE TABLE `author` (
+  `author_id` int(5) NOT NULL,
+  `name` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
+  `person_id` int(5) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `author`
+--
+
+INSERT INTO `author` (`author_id`, `name`, `person_id`) VALUES
+(1, 'Jinek M', NULL),
+(2, 'Chylinski K', NULL),
+(3, 'Fonfara I', NULL),
+(4, 'Hauer M', NULL),
+(5, 'Doudna J', NULL),
+(6, 'Arute F et al.', NULL),
+(7, 'Shen D', NULL),
+(8, 'Wu G', NULL),
+(9, 'Suk HI', NULL),
+(10, 'Hansen J et al.', NULL),
+(11, 'Malenka RC', NULL),
+(12, 'Nicoll RA', NULL),
+(13, 'Rezwan K', NULL),
+(14, 'Chen QZ', NULL),
+(15, 'Blaker JJ', NULL),
+(16, 'Boccaccini AR', NULL),
+(17, 'Devlin J', NULL),
+(18, 'Chang MW', NULL),
+(19, 'Lee K', NULL),
+(20, 'Toutanova K', NULL),
+(21, 'Siegel PH', NULL),
+(22, 'Fitzpatrick AWP et al.', NULL),
+(23, 'Cournia Z', NULL),
+(24, 'Allen B', NULL),
+(25, 'Sherman W', NULL),
+(26, 'Maude SL et al.', NULL),
+(27, 'Lopez Bernal J et al.', NULL),
+(28, 'Novoselov KS et al.', NULL),
+(29, 'JWST Transiting Exoplanet Community Early Release ...', NULL),
+(30, 'Reuter-Lorenz PA', NULL),
+(31, 'Cappell KA', NULL),
+(32, 'Riebesell U et al.', NULL),
+(33, 'Lanfranco AR et al.', NULL),
+(34, 'Haak W et al.', NULL),
+(35, 'Brunekreef B', NULL),
+(36, 'Holgate ST', NULL),
+(37, 'Anseth KS', NULL),
+(38, 'Bowman CN', NULL),
+(39, 'Brannon-Peppas L', NULL),
+(40, 'Deurenberg RH', NULL),
+(41, 'Stobberingh EE', NULL),
+(42, 'Wang Y et al.', NULL),
+(43, 'Guo MT et al.', NULL),
+(44, 'Alerstam T', NULL),
+(45, 'Taylor SR', NULL),
+(46, 'McLennan SM', NULL),
+(47, 'Charpentier E', NULL);
 
 -- --------------------------------------------------------
 
@@ -224,7 +289,6 @@ INSERT INTO `group_project` (`group_id`, `project_id`) VALUES
 CREATE TABLE `literature` (
   `lit_id` int(100) NOT NULL,
   `title` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  `authors` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `year` year(4) NOT NULL,
   `journal` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `doi` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
@@ -236,37 +300,101 @@ CREATE TABLE `literature` (
 -- Dumping data for table `literature`
 --
 
-INSERT INTO `literature` (`lit_id`, `title`, `authors`, `year`, `journal`, `doi`, `url`, `theory`) VALUES
-(1, 'A programmable dual-RNA-guided DNA endonuclease in adaptive bacterial immunity', 'Jinek M, Chylinski K, Fonfara I, Hauer M, Doudna JA, Charpentier E', '2012', 'Science', '10.1126/science.1225829', 'https://doi.org/10.1126/science.1225829', 'Describes the mechanism of CRISPR-Cas9 as a programmable genome editing tool'),
-(2, 'Quantum supremacy using a programmable superconducting processor', 'Arute F et al.', '2019', 'Nature', '10.1038/s41586-019-1666-5', 'https://doi.org/10.1038/s41586-019-1666-5', 'Demonstrates quantum computational advantage over classical supercomputers'),
-(3, 'Deep learning for cancer diagnosis: A systematic review', 'Shen D, Wu G, Suk HI', '2017', 'Annual Review of Biomedical Engineering', '10.1146/annurev-bioeng-071516-044442', 'https://doi.org/10.1146/annurev-bioeng-071516-044442', 'Reviews deep learning applications in medical image analysis'),
-(4, 'Global warming and the future of the Arctic', 'Hansen J et al.', '2016', 'Nature Climate Change', '10.1038/nclimate2924', 'https://doi.org/10.1038/nclimate2924', 'Predicts irreversible ice loss under continued greenhouse gas emissions'),
-(5, 'Long-term potentiation – a decade of progress', 'Malenka RC, Nicoll RA', '1999', 'Science', '10.1126/science.285.5435.1870', 'https://doi.org/10.1126/science.285.5435.1870', 'Reviews cellular and molecular mechanisms underlying synaptic plasticity'),
-(6, 'Biomaterials for bone tissue engineering: A review', 'Rezwan K, Chen QZ, Blaker JJ, Boccaccini AR', '2006', 'Biomaterials', '10.1016/j.biomaterials.2006.01.039', 'https://doi.org/10.1016/j.biomaterials.2006.01.039', 'Surveys bioactive and biodegradable materials for bone scaffolds'),
-(7, 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding', 'Devlin J, Chang MW, Lee K, Toutanova K', '2019', 'NAACL-HLT', '10.18653/v1/N19-1423', 'https://doi.org/10.18653/v1/N19-1423', 'Introduces BERT, a transformer-based model for NLP tasks'),
-(8, 'Terahertz technology and its applications', 'Siegel PH', '2002', 'IEEE Transactions on Microwave Theory and Techniques', '10.1109/TMTT.2002.808283', 'https://doi.org/10.1109/TMTT.2002.808283', 'Reviews THz sources, detectors and imaging applications'),
-(9, 'Cryo-EM structure of amyloid fibrils from Alzheimer disease brain', 'Fitzpatrick AWP et al.', '2017', 'Nature', '10.1038/nature23002', 'https://doi.org/10.1038/nature23002', 'High-resolution structural characterization of disease-relevant amyloid polymorphs'),
-(10, 'Free Energy Calculations in Structure-Based Drug Design', 'Cournia Z, Allen B, Sherman W', '2017', 'Journal of Chemical Information and Modeling', '10.1021/acs.jcim.7b00169', 'https://doi.org/10.1021/acs.jcim.7b00169', 'Reviews alchemical free energy methods and applications in drug discovery'),
-(11, 'Chimeric antigen receptor T cells for sustained remissions in leukemia', 'Maude SL et al.', '2014', 'New England Journal of Medicine', '10.1056/NEJMoa1407222', 'https://doi.org/10.1056/NEJMoa1407222', 'Clinical evidence for durable remission using CD19-targeting CAR-T therapy'),
-(12, 'SARS-CoV-2 variants of concern and vaccine effectiveness', 'Lopez Bernal J et al.', '2021', 'New England Journal of Medicine', '10.1056/NEJMoa2108891', 'https://doi.org/10.1056/NEJMoa2108891', 'Real-world vaccine effectiveness data against Alpha and Delta variants'),
-(13, 'Electric field effect in atomically thin carbon films', 'Novoselov KS et al.', '2004', 'Science', '10.1126/science.1102896', 'https://doi.org/10.1126/science.1102896', 'Discovery of graphene and demonstration of the electric field effect'),
-(14, 'Atmospheric characterization of the hot Jupiter WASP-39b', 'JWST Transiting Exoplanet Community Early Release Science Team', '2023', 'Nature', '10.1038/s41586-022-05650-9', 'https://doi.org/10.1038/s41586-022-05650-9', 'First detection of CO2 and other molecules in exoplanet atmosphere by JWST'),
-(15, 'Age-related changes in prefrontal cortex activity during working memory', 'Reuter-Lorenz PA, Cappell KA', '2008', 'Current Directions in Psychological Science', '10.1111/j.1467-8721.2008.00567.x', 'https://doi.org/10.1111/j.1467-8721.2008.00567.x', 'HAROLD model of hemispheric asymmetry reduction in older adults during cognitive tasks'),
-(16, 'The biological pump in a high CO2 world', 'Riebesell U et al.', '2009', 'Marine Ecology Progress Series', '10.3354/meps07582', 'https://doi.org/10.3354/meps07582', 'Reviews impacts of ocean acidification on particulate organic carbon export'),
-(17, 'Robot-assisted minimally invasive surgery: a review', 'Lanfranco AR et al.', '2004', 'Annals of Surgery', '10.1097/01.sla.0000103020.19595.7d', 'https://doi.org/10.1097/01.sla.0000103020.19595.7d', 'Overview of surgical robot systems and clinical outcomes'),
-(18, 'The genomic history of ancient Europe', 'Haak W et al.', '2015', 'Nature', '10.1038/nature14317', 'https://doi.org/10.1038/nature14317', 'Massive ancient DNA study revealing steppe migration into Neolithic Europe'),
-(19, 'Urban air pollution and health: A review of epidemiological evidence', 'Brunekreef B, Holgate ST', '2002', 'Lancet', '10.1016/S0140-6736(02)11274-8', 'https://doi.org/10.1016/S0140-6736(02)11274-8', 'Epidemiological evidence linking urban air pollutants to respiratory and cardiovascular disease'),
-(20, 'Mechanical properties of hydrogels and their experimental determination', 'Anseth KS, Bowman CN, Brannon-Peppas L', '1996', 'Biomaterials', '10.1016/0142-9612(96)87284-9', 'https://doi.org/10.1016/0142-9612(96)87284-9', 'Reviews theory and measurement of elastic and viscoelastic properties of hydrogels'),
-(21, 'Molecular epidemiology of methicillin-resistant Staphylococcus aureus', 'Deurenberg RH, Stobberingh EE', '2008', 'Infection, Genetics and Evolution', '10.1016/j.meegid.2007.07.007', 'https://doi.org/10.1016/j.meegid.2007.07.007', 'Global MRSA clonal lineages and resistance gene acquisition mechanisms'),
-(22, 'Theta sequences are essential for internally generated hippocampal firing fields', 'Wang Y et al.', '2020', 'Nature Neuroscience', '10.1038/s41593-019-0559-0', 'https://doi.org/10.1038/s41593-019-0559-0', 'Demonstrates theta phase precession as a mechanism for sequential memory retrieval'),
-(23, 'Droplet microfluidics: a tool for biology, chemistry and nanotechnology', 'Guo MT et al.', '2012', 'Lab on a Chip', '10.1039/c2lc21147e', 'https://doi.org/10.1039/c2lc21147e', 'Review of droplet generation, manipulation and applications in high-throughput screening'),
-(24, 'Long-distance migration of birds and its ecological significance', 'Alerstam T', '2011', 'Science', '10.1126/science.1194106', 'https://doi.org/10.1126/science.1194106', 'Review of energetics, navigation and ecological drivers of long-distance avian migration'),
-(25, 'Rare earth element geochemistry', 'Taylor SR, McLennan SM', '1985', 'Geochimica et Cosmochimica Acta', '10.1016/0016-7037(85)90170-3', 'https://doi.org/10.1016/0016-7037(85)90170-3', 'Foundational reference for REE distribution patterns in crustal and mantle rocks'),
-(26, 'The bilingual brain: Flexibility and control in the human language system', 'Abutalebi J, Green DW', '2016', 'Psychological Science in the Public Interest', '10.1177/1529100616675605', 'https://doi.org/10.1177/1529100616675605', 'Neural basis of bilingual language control and the adaptive control hypothesis'),
-(27, 'Highly efficient perovskite solar cells via improved carrier management', 'Kim M et al.', '2022', 'Science', '10.1126/science.abm953', 'https://doi.org/10.1126/science.abm953', 'Interface engineering strategy achieving >25% PCE in perovskite solar cells'),
-(28, 'Proteomics-based identification of pancreatic cancer biomarkers', 'Pan S et al.', '2009', 'Journal of Proteome Research', '10.1021/pr900008q', 'https://doi.org/10.1021/pr900008q', 'Discovery of novel plasma protein biomarkers for early pancreatic cancer detection'),
-(29, 'Human mobility and the worldwide spread of infectious diseases', 'Brockmann D, Helbing D', '2013', 'Science', '10.1126/science.1245200', 'https://doi.org/10.1126/science.1245200', 'Effective distance model linking air traffic mobility to epidemic arrival times'),
-(30, 'Engineering the third generation of synthetic biology', 'Khalil AS, Collins JJ', '2010', 'Nature Reviews Genetics', '10.1038/nrg2775', 'https://doi.org/10.1038/nrg2775', 'Review of genetic circuit design principles and applications in metabolic engineering');
+INSERT INTO `literature` (`lit_id`, `title`, `year`, `journal`, `doi`, `url`, `theory`) VALUES
+(1, 'A programmable dual-RNA-guided DNA endonuclease in adaptive bacterial immunity', '2012', 'Science', '10.1126/science.1225829', 'https://doi.org/10.1126/science.1225829', 'Describes the mechanism of CRISPR-Cas9 as a programmable genome editing tool'),
+(2, 'Quantum supremacy using a programmable superconducting processor', '2019', 'Nature', '10.1038/s41586-019-1666-5', 'https://doi.org/10.1038/s41586-019-1666-5', 'Demonstrates quantum computational advantage over classical supercomputers'),
+(3, 'Deep learning for cancer diagnosis: A systematic review', '2017', 'Annual Review of Biomedical Engineering', '10.1146/annurev-bioeng-071516-044442', 'https://doi.org/10.1146/annurev-bioeng-071516-044442', 'Reviews deep learning applications in medical image analysis'),
+(4, 'Global warming and the future of the Arctic', '2016', 'Nature Climate Change', '10.1038/nclimate2924', 'https://doi.org/10.1038/nclimate2924', 'Predicts irreversible ice loss under continued greenhouse gas emissions'),
+(5, 'Long-term potentiation – a decade of progress', '1999', 'Science', '10.1126/science.285.5435.1870', 'https://doi.org/10.1126/science.285.5435.1870', 'Reviews cellular and molecular mechanisms underlying synaptic plasticity'),
+(6, 'Biomaterials for bone tissue engineering: A review', '2006', 'Biomaterials', '10.1016/j.biomaterials.2006.01.039', 'https://doi.org/10.1016/j.biomaterials.2006.01.039', 'Surveys bioactive and biodegradable materials for bone scaffolds'),
+(7, 'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding', '2019', 'NAACL-HLT', '10.18653/v1/N19-1423', 'https://doi.org/10.18653/v1/N19-1423', 'Introduces BERT, a transformer-based model for NLP tasks'),
+(8, 'Terahertz technology and its applications', '2002', 'IEEE Transactions on Microwave Theory and Techniques', '10.1109/TMTT.2002.808283', 'https://doi.org/10.1109/TMTT.2002.808283', 'Reviews THz sources, detectors and imaging applications'),
+(9, 'Cryo-EM structure of amyloid fibrils from Alzheimer disease brain', '2017', 'Nature', '10.1038/nature23002', 'https://doi.org/10.1038/nature23002', 'High-resolution structural characterization of disease-relevant amyloid polymorphs'),
+(10, 'Free Energy Calculations in Structure-Based Drug Design', '2017', 'Journal of Chemical Information and Modeling', '10.1021/acs.jcim.7b00169', 'https://doi.org/10.1021/acs.jcim.7b00169', 'Reviews alchemical free energy methods and applications in drug discovery'),
+(11, 'Chimeric antigen receptor T cells for sustained remissions in leukemia', '2014', 'New England Journal of Medicine', '10.1056/NEJMoa1407222', 'https://doi.org/10.1056/NEJMoa1407222', 'Clinical evidence for durable remission using CD19-targeting CAR-T therapy'),
+(12, 'SARS-CoV-2 variants of concern and vaccine effectiveness', '2021', 'New England Journal of Medicine', '10.1056/NEJMoa2108891', 'https://doi.org/10.1056/NEJMoa2108891', 'Real-world vaccine effectiveness data against Alpha and Delta variants'),
+(13, 'Electric field effect in atomically thin carbon films', '2004', 'Science', '10.1126/science.1102896', 'https://doi.org/10.1126/science.1102896', 'Discovery of graphene and demonstration of the electric field effect'),
+(14, 'Atmospheric characterization of the hot Jupiter WASP-39b', '2023', 'Nature', '10.1038/s41586-022-05650-9', 'https://doi.org/10.1038/s41586-022-05650-9', 'First detection of CO2 and other molecules in exoplanet atmosphere by JWST'),
+(15, 'Age-related changes in prefrontal cortex activity during working memory', '2008', 'Current Directions in Psychological Science', '10.1111/j.1467-8721.2008.00567.x', 'https://doi.org/10.1111/j.1467-8721.2008.00567.x', 'HAROLD model of hemispheric asymmetry reduction in older adults during cognitive tasks'),
+(16, 'The biological pump in a high CO2 world', '2009', 'Marine Ecology Progress Series', '10.3354/meps07582', 'https://doi.org/10.3354/meps07582', 'Reviews impacts of ocean acidification on particulate organic carbon export'),
+(17, 'Robot-assisted minimally invasive surgery: a review', '2004', 'Annals of Surgery', '10.1097/01.sla.0000103020.19595.7d', 'https://doi.org/10.1097/01.sla.0000103020.19595.7d', 'Overview of surgical robot systems and clinical outcomes'),
+(18, 'The genomic history of ancient Europe', '2015', 'Nature', '10.1038/nature14317', 'https://doi.org/10.1038/nature14317', 'Massive ancient DNA study revealing steppe migration into Neolithic Europe'),
+(19, 'Urban air pollution and health: A review of epidemiological evidence', '2002', 'Lancet', '10.1016/S0140-6736(02)11274-8', 'https://doi.org/10.1016/S0140-6736(02)11274-8', 'Epidemiological evidence linking urban air pollutants to respiratory and cardiovascular disease'),
+(20, 'Mechanical properties of hydrogels and their experimental determination', '1996', 'Biomaterials', '10.1016/0142-9612(96)87284-9', 'https://doi.org/10.1016/0142-9612(96)87284-9', 'Reviews theory and measurement of elastic and viscoelastic properties of hydrogels'),
+(21, 'Molecular epidemiology of methicillin-resistant Staphylococcus aureus', '2008', 'Infection, Genetics and Evolution', '10.1016/j.meegid.2007.07.007', 'https://doi.org/10.1016/j.meegid.2007.07.007', 'Global MRSA clonal lineages and resistance gene acquisition mechanisms'),
+(22, 'Theta sequences are essential for internally generated hippocampal firing fields', '2020', 'Nature Neuroscience', '10.1038/s41593-019-0559-0', 'https://doi.org/10.1038/s41593-019-0559-0', 'Demonstrates theta phase precession as a mechanism for sequential memory retrieval'),
+(23, 'Droplet microfluidics: a tool for biology, chemistry and nanotechnology', '2012', 'Lab on a Chip', '10.1039/c2lc21147e', 'https://doi.org/10.1039/c2lc21147e', 'Review of droplet generation, manipulation and applications in high-throughput screening'),
+(24, 'Long-distance migration of birds and its ecological significance', '2011', 'Science', '10.1126/science.1194106', 'https://doi.org/10.1126/science.1194106', 'Review of energetics, navigation and ecological drivers of long-distance avian migration'),
+(25, 'Rare earth element geochemistry', '1985', 'Geochimica et Cosmochimica Acta', '10.1016/0016-7037(85)90170-3', 'https://doi.org/10.1016/0016-7037(85)90170-3', 'Foundational reference for REE distribution patterns in crustal and mantle rocks'),
+(26, 'The bilingual brain: Flexibility and control in the human language system', '2016', 'Psychological Science in the Public Interest', '10.1177/1529100616675605', 'https://doi.org/10.1177/1529100616675605', 'Neural basis of bilingual language control and the adaptive control hypothesis'),
+(27, 'Highly efficient perovskite solar cells via improved carrier management', '2022', 'Science', '10.1126/science.abm953', 'https://doi.org/10.1126/science.abm953', 'Interface engineering strategy achieving >25% PCE in perovskite solar cells'),
+(28, 'Proteomics-based identification of pancreatic cancer biomarkers', '2009', 'Journal of Proteome Research', '10.1021/pr900008q', 'https://doi.org/10.1021/pr900008q', 'Discovery of novel plasma protein biomarkers for early pancreatic cancer detection'),
+(29, 'Human mobility and the worldwide spread of infectious diseases', '2013', 'Science', '10.1126/science.1245200', 'https://doi.org/10.1126/science.1245200', 'Effective distance model linking air traffic mobility to epidemic arrival times'),
+(30, 'Engineering the third generation of synthetic biology', '2010', 'Nature Reviews Genetics', '10.1038/nrg2775', 'https://doi.org/10.1038/nrg2775', 'Review of genetic circuit design principles and applications in metabolic engineering');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `literature_author`
+--
+
+CREATE TABLE `literature_author` (
+  `lit_id` int(5) NOT NULL,
+  `author_id` int(5) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `literature_author`
+--
+
+INSERT INTO `literature_author` (`lit_id`, `author_id`) VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(2, 7),
+(3, 8),
+(3, 9),
+(3, 10),
+(4, 11),
+(5, 12),
+(5, 13),
+(6, 14),
+(6, 15),
+(6, 16),
+(6, 17),
+(7, 18),
+(7, 19),
+(7, 20),
+(7, 21),
+(8, 22),
+(9, 23),
+(10, 24),
+(10, 25),
+(10, 26),
+(11, 27),
+(12, 28),
+(13, 29),
+(14, 30),
+(15, 31),
+(15, 32),
+(16, 33),
+(17, 34),
+(18, 35),
+(19, 36),
+(19, 37),
+(20, 38),
+(20, 39),
+(20, 40),
+(21, 41),
+(21, 42),
+(22, 43),
+(23, 44),
+(24, 45),
+(25, 46),
+(25, 47);
 
 -- --------------------------------------------------------
 
@@ -853,6 +981,12 @@ INSERT INTO `task_assignment` (`person_id`, `task_id`, `assigned_date`) VALUES
 --
 
 --
+-- Indexes for table `author`
+--
+ALTER TABLE `author`
+  ADD UNIQUE KEY `author_id` (`author_id`);
+
+--
 -- Indexes for table `department`
 --
 ALTER TABLE `department`
@@ -967,6 +1101,12 @@ ALTER TABLE `task_assignment`
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `author`
+--
+ALTER TABLE `author`
+  MODIFY `author_id` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `department`
@@ -1084,48 +1224,6 @@ ALTER TABLE `task_assignment`
   ADD CONSTRAINT `task_assignment_ibfk_1` FOREIGN KEY (`person_id`) REFERENCES `person` (`person_id`),
   ADD CONSTRAINT `task_assignment_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`);
 COMMIT;
-
-
--- --------------------------------------------------------
--- View 1: member_contact_view
--- Only research group members can see emails
--- --------------------------------------------------------
-CREATE VIEW `member_contact_view` AS
-SELECT 
-    p.person_id,
-    p.name,
-    p.email,
-    pg.role,
-    rg.name AS group_name
-FROM person p
-JOIN person_group pg ON p.person_id = pg.person_id
-JOIN research_group rg ON pg.group_id = rg.group_id;
-
--- --------------------------------------------------------
--- View 2: project_access_view
--- Project Leads see all projects,
--- everyone else only sees their assigned projects
--- --------------------------------------------------------
-CREATE VIEW `project_access_view` AS
-SELECT 
-    p.person_id,
-    p.name,
-    pm.role AS project_role,
-    proj.project_id,
-    proj.title,
-    proj.description,
-    proj.status,
-    proj.start_date,
-    proj.end_date
-FROM person p
-JOIN project_member pm ON p.person_id = pm.person_id
-JOIN project proj ON (
-    -- Project Leads see all projects
-    pm.role = 'Project Lead'
-    OR
-    -- Everyone else only sees their assigned projects
-    proj.project_id = pm.project_id
-);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
