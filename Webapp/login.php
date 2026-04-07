@@ -1,7 +1,6 @@
-<!-- PHP logic to connect to DB and provide authentication logic -->
 <?php
-  require_once 'includes/database-connection.php';
   require_once 'includes/session.php';
+  require_once 'includes/database-connection.php';
   if ($logged_in) {
     header('Location: profile.php');
     exit;
