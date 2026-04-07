@@ -8,7 +8,7 @@
 I am using a Docker container to host the webpage & SQL DB for live updates & testing.
 To build & run a container using Docker, run in terminal:
 
-    docker build -t researchdb .
+    docker build -t researchdb . # ONLY NEEDED ONCE
     docker run -p 8080:80 -v $(pwd):/var/www/html researchdb
 
 Then visit:
@@ -29,5 +29,16 @@ Then visit:
         ├── database-connection.php
         └── session.php
 
+## Test Login:
+email:    alice.johnson@uni.edu
+password: testpassword123
+
+
 **NOTE:** This container was built using MacOS. If any of these steps 
 don't work, update this file with a workaround.
+
+
+Add to any page with 'logout' button:
+  <button onclick="window.location.href='logout.php'" class="win98-btn">
+  Log Out
+</button> 
