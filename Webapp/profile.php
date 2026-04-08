@@ -1,6 +1,6 @@
 <?php
-require_once 'includes/session.php';
-require_once 'includes/database-connection.php';
+require_once "includes/session.php";
+require_once "includes/database-connection.php";
 require_login($logged_in);
 ?>
 <!DOCTYPE html>
@@ -534,7 +534,7 @@ require_login($logged_in);
     <!-- Address bar -->
     <div class="address-bar">
       <span class="address-label">Address</span>
-      <input class="address-input" type="text" 
+      <input class="address-input" type="text"
              value="http://localhost/researchdb/profile.php" readonly>
       <button class="go-btn">Go</button>
     </div>
@@ -546,15 +546,23 @@ require_login($logged_in);
       <div class="page-header">
         <h1>🔬 Research Group Database</h1>
         <div class="page-header-right">
-          Logged in as: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong><br>
-          Role: <strong><?php echo htmlspecialchars($_SESSION['role']); ?></strong>
+          Logged in as: <strong><?php echo htmlspecialchars(
+              $_SESSION["username"],
+          ); ?></strong><br>
+          Role: <strong><?php echo htmlspecialchars(
+              $_SESSION["role"],
+          ); ?></strong>
         </div>
       </div>
 
       <!-- Welcome banner -->
       <div class="welcome-banner">
-        💡 <span>Welcome back, <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong>. 
-        You are logged in as <strong><?php echo htmlspecialchars($_SESSION['role']); ?></strong>.</span>
+        💡 <span>Welcome back, <strong><?php echo htmlspecialchars(
+            $_SESSION["username"],
+        ); ?></strong>.
+        You are logged in as <strong><?php echo htmlspecialchars(
+            $_SESSION["role"],
+        ); ?></strong>.</span>
       </div>
 
       <!-- Quick links -->
@@ -573,24 +581,47 @@ require_login($logged_in);
       <div class="panel-grid">
 
         <div class="panel">
-          <div class="panel-header">📁 Active Projects</div>
+            <div class="panel-header">📁 Active Projects</div>
+            <div class="panel-body">
+              <?php
+              $projects = pdo(
+                  $pdo,
+                  "SELECT title, status FROM project WHERE status = 'Active' LIMIT 4",
+              );
+              foreach ($projects as $project): ?>
+                <div class="panel-row">
+                  <span class="panel-link"><?php echo htmlspecialchars(
+                      $project["title"],
+                  ); ?></span>
+                  <span><?php echo htmlspecialchars(
+                      $project["status"],
+                  ); ?></span>
+                </div>
+              <?php endforeach;
+              ?>
+              <div class="panel-row" style="padding-top:6px;">
+                <a class="panel-link" href="#">View all projects »</a>
+              </div>
+            </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">Recent Tasks</div>
           <div class="panel-body">
-            <div class="panel-row">
-              <span class="panel-link">CRISPR Gene Editing Study</span>
-              <span>Active</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Quantum Error Correction</span>
-              <span>Active</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Amyloid Fibril Structure</span>
-              <span>Active</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">CAR-T Cell Optimization</span>
-              <span>Active</span>
-            </div>
+            <?php
+            $tasks = pdo(
+                $pdo,
+                "SELECT title, status, progress FROM task ORDER BY task_id DESC LIMIT 4",
+            );
+            foreach ($tasks as $task): ?>
+              <div class="panel-row">
+                <span class="panel-link"><?php echo htmlspecialchars(
+                    $task["title"],
+                ); ?></span>
+                <span><?php echo htmlspecialchars($task["status"]); ?></span>
+              </div>
+            <?php endforeach;
+            ?>
             <div class="panel-row" style="padding-top:6px;">
               <a class="panel-link" href="#">View all projects »</a>
             </div>
@@ -598,51 +629,26 @@ require_login($logged_in);
         </div>
 
         <div class="panel">
-          <div class="panel-header">Recent Tasks</div>
-          <div class="panel-body">
-            <div class="panel-row">
-              <span class="panel-link">Design sgRNA sequences</span>
-              <span>✔ Done</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Train CNN baseline model</span>
-              <span>✔ Done</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Prepare neuron staining</span>
-              <span>⏳ 60%</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Align optical components</span>
-              <span>⏳ 45%</span>
-            </div>
-            <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all tasks »</a>
-            </div>
-          </div>
-        </div>
-
-        <div class="panel">
           <div class="panel-header">Recent Experiments</div>
           <div class="panel-body">
-            <div class="panel-row">
-              <span class="panel-link">CRISPR Transfection Trial 1</span>
-              <span>Completed</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Qubit Coherence Time Test</span>
-              <span>Completed</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Fibril Cryo-EM Prep</span>
-              <span>Completed</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">EEG Language Switch</span>
-              <span>Completed</span>
-            </div>
+            <?php
+            $experiments = pdo(
+                $pdo,
+                "SELECT title, status FROM experiment ORDER BY experiment_id DESC LIMIT 4",
+            );
+            foreach ($experiments as $experiment): ?>
+              <div class="panel-row">
+                <span class="panel-link"><?php echo htmlspecialchars(
+                    $experiment["title"],
+                ); ?></span>
+                <span><?php echo htmlspecialchars(
+                    $experiment["status"],
+                ); ?></span>
+              </div>
+            <?php endforeach;
+            ?>
             <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all experiments »</a>
+              <a class="panel-link" href="#">View all projects »</a>
             </div>
           </div>
         </div>
@@ -650,24 +656,22 @@ require_login($logged_in);
         <div class="panel">
           <div class="panel-header">Recent Literature</div>
           <div class="panel-body">
-            <div class="panel-row">
-              <span class="panel-link">CRISPR-Cas9 Genome Editing</span>
-              <span>2012</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Quantum Supremacy</span>
-              <span>2019</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">Cryo-EM Amyloid Fibrils</span>
-              <span>2017</span>
-            </div>
-            <div class="panel-row">
-              <span class="panel-link">CAR-T Cell Remissions</span>
-              <span>2014</span>
-            </div>
+            <?php
+            $literature = pdo(
+                $pdo,
+                "SELECT title, year FROM literature ORDER BY lit_id DESC LIMIT 4",
+            );
+            foreach ($literature as $lit): ?>
+              <div class="panel-row">
+                <span class="panel-link"><?php echo htmlspecialchars(
+                    $lit["title"],
+                ); ?></span>
+                <span><?php echo htmlspecialchars($lit["year"]); ?></span>
+              </div>
+            <?php endforeach;
+            ?>
             <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all literature »</a>
+              <a class="panel-link" href="#">View all projects »</a>
             </div>
           </div>
         </div>
