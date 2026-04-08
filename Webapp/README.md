@@ -4,6 +4,11 @@
 - Docker Desktop installed and running
 - Port 8080 free on your machine
 
+## Adjustments
+- database-connection.php opening variables
+    - Assumes database connection is from root with no password, adjust for local settings
+- check Docker version, may need to run with podman
+
 ## To run locally:
 I am using a Docker container to host the webpage & SQL DB for live updates & testing.
 To build & run a container using Docker, run in terminal:

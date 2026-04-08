@@ -1,6 +1,6 @@
 <?php                                             // Opening PHP tag
 $type     = 'mysql';                             // Type of database
-$server   = 'host.docker.internal';            // Server (Docker to local MySQL)
+$server   = 'host.docker.internal';             // Server (Docker to local MySQL)
 $db       = 'research_group_db';               // Name of the database
 $port     = '3306';                           // Port is usually 3306
 $charset  = 'utf8mb4';                       // UTF-8 encoding using 4 bytes of data per char
