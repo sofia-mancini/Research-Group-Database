@@ -80,7 +80,7 @@ require_login($logged_in);
 
   <div class="ie-window">
     <div class="title-bar">
-      <div class="title-bar-text">🧪 Experiments — Research Group Database — Microsoft Internet Explorer</div>
+      <div class="title-bar-text">🧪 Experiments: Research Group Database Microsoft Internet Explorer</div>
       <div class="title-bar-controls">
         <div class="win-btn">_</div>
         <div class="win-btn">□</div>
@@ -135,6 +135,24 @@ require_login($logged_in);
       </div>
 
       <hr class="divider">
+
+      <?php if (isset($_GET['updated'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Experiment updated successfully.
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['added'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+          padding:8px;margin-bottom:10px;background:#ccffcc;
+          border-top:2px solid #808080;border-left:2px solid #808080;
+          border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Experiment added successfully.
+      </div>
+      <?php endif; ?>
 
       <button class="toolbar-action" onclick="window.location='experiment_add.php'">➕ New Experiment</button>
 

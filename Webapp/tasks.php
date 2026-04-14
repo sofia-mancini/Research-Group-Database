@@ -1,6 +1,7 @@
 <?php
 require_once "includes/session.php";
 require_once "includes/database-connection.php";
+require_once "includes/auth.php";
 require_login($logged_in);
 ?>
 <!DOCTYPE html>
@@ -110,6 +111,25 @@ require_login($logged_in);
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
       </div>
       <hr class="divider">
+
+      <?php if (isset($_GET['updated'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Task updated successfully.
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['added'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Task added successfully.
+      </div>
+      <?php endif; ?>
+
       <button class="toolbar-action" onclick="window.location='task_add.php'">➕ New Task</button>
       <table class="data-table">
         <thead>
@@ -128,9 +148,9 @@ require_login($logged_in);
           foreach ($tasks as $t):
 
               $statusClass = match (strtolower($t["status"])) {
-                  "active" => "status-active",
+                  "in progress" => "status-active",
                   "completed" => "status-completed",
-                  "pending" => "status-pending",
+                  "not started" => "status-pending",
                   "cancelled" => "status-cancelled",
                   default => "",
               };
@@ -152,10 +172,15 @@ require_login($logged_in);
             </td>
             <td><?php echo htmlspecialchars($t["due_date"] ?? "—"); ?></td>
             <td>
-              <a href="task_edit.php?id=<?php echo $t["task_id"]; ?>">Edit</a> |
-              <a href="task_delete.php?id=<?php echo $t[
-                  "task_id"
-              ]; ?>" onclick="return confirm('Delete this task?')">Delete</a>
+                <?php if (can_edit_task($_SESSION['role'], $_SESSION['personID'], $t['task_id'], $pdo)): ?>
+                    <a href="task_edit.php?id=<?php echo $t['task_id']; ?>">Edit</a> |
+                <?php endif; ?>
+                <?php if (can_delete($_SESSION['role'])): ?>
+                    <a href="task_delete.php?id=<?php echo $t['task_id']; ?>"
+                      onclick="return confirm('Delete this task?')">Delete</a>
+                <?php else: ?>
+                    <a href="#" onclick="alert('Access Denied: Only a Principal Investigator can delete records.'); return false;">Delete</a>
+                <?php endif; ?>
             </td>
           </tr>
           <?php

@@ -1,7 +1,23 @@
 <?php
 require_once "includes/session.php";
 require_once "includes/database-connection.php";
+require_once "includes/auth.php";
 require_login($logged_in);
+
+// Define dept filter here so it's available throughout the page
+$dept_filter = filter_input(INPUT_GET, 'dept_id', FILTER_VALIDATE_INT);
+
+$sql = $dept_filter
+    ? "SELECT DISTINCT p.* FROM project p
+       JOIN group_project gp ON p.project_id = gp.project_id
+       JOIN research_dept rd ON gp.group_id = rd.group_id
+       WHERE rd.department_id = :dept_id
+       ORDER BY p.project_id DESC"
+    : "SELECT * FROM project ORDER BY project_id DESC";
+
+$projects = $dept_filter
+    ? pdo($pdo, $sql, ['dept_id' => $dept_filter])
+    : pdo($pdo, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -86,21 +102,18 @@ require_login($logged_in);
     </div>
     <div class="address-bar">
       <span class="address-label">Address</span>
-      <input class="address-input" type="text" value="http://localhost/researchdb/projects.php" readonly>
+      <input class="address-input" type="text" value="http://localhost/researchdb/projects.php<?php echo $dept_filter ? '?dept_id='.$dept_filter : ''; ?>" readonly>
       <button class="go-btn">Go</button>
     </div>
     <div class="ie-content">
       <div class="page-header">
         <h1>📁 Projects</h1>
         <div class="page-header-right">
-          Logged in as: <strong><?php echo htmlspecialchars(
-              $_SESSION["username"],
-          ); ?></strong><br>
-          Role: <strong><?php echo htmlspecialchars(
-              $_SESSION["role"],
-          ); ?></strong>
+          Logged in as: <strong><?php echo htmlspecialchars($_SESSION["username"]); ?></strong><br>
+          Role: <strong><?php echo htmlspecialchars($_SESSION["role"]); ?></strong>
         </div>
       </div>
+
       <div class="quick-links">
         <a class="quick-link-btn" href="experiments.php">🧪 Experiments</a>
         <a class="quick-link-btn" href="projects.php" style="border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;">📁 Projects</a>
@@ -109,8 +122,46 @@ require_login($logged_in);
         <a class="quick-link-btn" href="tasks.php">✅ Tasks</a>
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
       </div>
+
       <hr class="divider">
+
+      <?php if (isset($_GET['updated'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Project updated successfully.
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['added'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+          padding:8px;margin-bottom:10px;background:#ccffcc;
+          border-top:2px solid #808080;border-left:2px solid #808080;
+          border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Project added successfully.
+      </div>
+      <?php endif; ?>
+
+      <?php if ($dept_filter):
+          $dept_name = pdo($pdo,
+              "SELECT name FROM department WHERE department_id = :id",
+              ['id' => $dept_filter]
+          )->fetch();
+      ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#dde8ff;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          🏛️ Showing projects for: <strong><?php echo htmlspecialchars($dept_name['name'] ?? 'Unknown'); ?></strong>
+          &nbsp;|&nbsp; <a href="projects.php">Show all</a>
+      </div>
+      <?php endif; ?>
+
+      <?php if (can_edit_project($_SESSION['role'])): ?>
       <button class="toolbar-action" onclick="window.location='project_add.php'">➕ New Project</button>
+      <?php endif; ?>
+
       <table class="data-table">
         <thead>
           <tr>
@@ -123,55 +174,50 @@ require_login($logged_in);
           </tr>
         </thead>
         <tbody>
-          <?php
-          $projects = pdo(
-              $pdo,
-              "SELECT * FROM project ORDER BY project_id DESC",
-          );
-          foreach ($projects as $p):
+          <?php foreach ($projects as $p):
               $statusClass = match (strtolower($p["status"])) {
-                  "active" => "status-active",
+                  "active"    => "status-active",
                   "completed" => "status-completed",
-                  "pending" => "status-pending",
+                  "pending"   => "status-pending",
                   "cancelled" => "status-cancelled",
-                  default => "",
+                  default     => "",
               }; ?>
           <tr>
             <td><?php echo htmlspecialchars($p["project_id"]); ?></td>
-            <td><a href="project_view.php?id=<?php echo $p[
-                "project_id"
-            ]; ?>"><?php echo htmlspecialchars($p["title"]); ?></a></td>
-            <td><span class="status-badge <?php echo $statusClass; ?>"><?php echo htmlspecialchars(
-    $p["status"],
-); ?></span></td>
+            <td><a href="project_view.php?id=<?php echo $p["project_id"]; ?>"><?php echo htmlspecialchars($p["title"]); ?></a></td>
+            <td><span class="status-badge <?php echo $statusClass; ?>"><?php echo htmlspecialchars($p["status"]); ?></span></td>
             <td><?php echo htmlspecialchars($p["start_date"] ?? "—"); ?></td>
             <td><?php echo htmlspecialchars($p["end_date"] ?? "—"); ?></td>
             <td>
-              <a href="project_edit.php?id=<?php echo $p[
-                  "project_id"
-              ]; ?>">Edit</a> |
-              <a href="project_delete.php?id=<?php echo $p[
-                  "project_id"
-              ]; ?>" onclick="return confirm('Delete this project?')">Delete</a>
+              <?php if (can_edit_project($_SESSION['role'])): ?>
+                <a href="project_edit.php?id=<?php echo $p['project_id']; ?>">Edit</a> |
+              <?php endif; ?>
+              <?php if (can_delete($_SESSION['role'])): ?>
+                <a href="project_delete.php?id=<?php echo $p['project_id']; ?>"
+                   onclick="return confirm('Delete this project?')">Delete</a>
+              <?php else: ?>
+                <a href="#" onclick="alert('Access Denied: Only a Principal Investigator can delete records.'); return false;">Delete</a>
+              <?php endif; ?>
             </td>
           </tr>
-          <?php
-          endforeach;
-          ?>
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>
+
     <div class="ie-status">
       <div class="status-panel">✔ Done</div>
       <div class="status-panel">research_group_db @ localhost</div>
       <div class="status-panel" style="margin-left:auto;">🌐 Local intranet</div>
     </div>
   </div>
+
   <div class="taskbar">
     <button class="start-btn"><div class="start-logo"><span></span><span></span><span></span><span></span></div>Start</button>
     <div class="taskbar-active">📁 Projects — Research Group Database</div>
     <div class="taskbar-clock" id="clock">12:00 PM</div>
   </div>
+
   <script>
     function updateClock() { const now = new Date(); let h = now.getHours(), m = now.getMinutes(); const ampm = h >= 12 ? 'PM' : 'AM'; h = h % 12 || 12; document.getElementById('clock').textContent = h + ':' + String(m).padStart(2, '0') + ' ' + ampm; }
     updateClock(); setInterval(updateClock, 1000);

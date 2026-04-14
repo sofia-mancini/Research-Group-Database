@@ -1,13 +1,14 @@
 <?php
 require_once "includes/session.php";
 require_once "includes/database-connection.php";
+require_once "includes/auth.php";
 require_login($logged_in);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Literature — Research Group DB</title>
+  <title>Literature: Research Group DB</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif; font-size: 11px; background-color: #008080; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 4px); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px 16px 40px; color: #000; }
@@ -60,7 +61,7 @@ require_login($logged_in);
 <body>
   <div class="ie-window">
     <div class="title-bar">
-      <div class="title-bar-text">📚 Literature — Research Group Database — Microsoft Internet Explorer</div>
+      <div class="title-bar-text">📚 Literature: Research Group Database - Microsoft Internet Explorer</div>
       <div class="title-bar-controls">
         <div class="win-btn">_</div><div class="win-btn">□</div>
         <a href="logout.php" class="win-btn" title="Log Out">✕</a>
@@ -103,7 +104,27 @@ require_login($logged_in);
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
       </div>
       <hr class="divider">
-      <button class="toolbar-action" onclick="window.location='literature_add.php'">➕ Add Literature</button>
+
+      <?php if (isset($_GET['updated'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Literature updated successfully.
+      </div>
+      <?php endif; ?>
+
+      <?php if (isset($_GET['added'])): ?>
+      <div style="display:flex;align-items:center;gap:10px;
+           padding:8px;margin-bottom:10px;background:#ccffcc;
+           border-top:2px solid #808080;border-left:2px solid #808080;
+           border-right:2px solid #fff;border-bottom:2px solid #fff;">
+          Literature added successfully.
+      </div>
+      <?php endif; ?>
+
+
+      <button class="toolbar-action" onclick="window.location='lit_add.php'">➕ Add Literature</button>
       <table class="data-table">
         <thead>
           <tr>
@@ -131,12 +152,15 @@ require_login($logged_in);
                 $lit["journal"] ?? ($lit["source"] ?? "—"),
             ); ?></td>
             <td>
-              <a href="literature_edit.php?id=<?php echo $lit[
-                  "lit_id"
-              ]; ?>">Edit</a> |
-              <a href="literature_delete.php?id=<?php echo $lit[
-                  "lit_id"
-              ]; ?>" onclick="return confirm('Delete this entry?')">Delete</a>
+                <?php if (can_edit_literature($_SESSION['role'])): ?>
+                    <a href="lit_edit.php?id=<?php echo $lit['lit_id']; ?>">Edit</a> |
+                <?php endif; ?>
+                <?php if (can_delete($_SESSION['role'])): ?>
+                    <a href="lit_delete.php?id=<?php echo $lit['lit_id']; ?>"
+                      onclick="return confirm('Delete this literature entry?')">Delete</a>
+                <?php else: ?>
+                    <a href="#" onclick="alert('Access Denied: Only a Principal Investigator can delete records.'); return false;">Delete</a>
+                <?php endif; ?>
             </td>
           </tr>
           <?php endforeach;
@@ -152,7 +176,7 @@ require_login($logged_in);
   </div>
   <div class="taskbar">
     <button class="start-btn"><div class="start-logo"><span></span><span></span><span></span><span></span></div>Start</button>
-    <div class="taskbar-active">📚 Literature — Research Group Database</div>
+    <div class="taskbar-active">📚 Literature: Research Group Database</div>
     <div class="taskbar-clock" id="clock">12:00 PM</div>
   </div>
   <script>
