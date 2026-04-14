@@ -111,33 +111,36 @@ require_login($logged_in);
           <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Abreviation</th>
-            <th>Actions</th>
+            <th>Abbreviation</th>
+            <th>Projects</th>
           </tr>
         </thead>
         <tbody>
           <?php
-          $departments = pdo($pdo, "SELECT * from department");
-          foreach ($departments as $d): ?>
-          <tr>
-            <td><?php echo htmlspecialchars($d["department_id"]); ?></td>
-            <td><a href="department_view.php?id=<?php echo $d[
-                "department_id"
-            ]; ?>"><?php echo htmlspecialchars($d["name"]); ?></a></td>
-            <td><?php echo htmlspecialchars($d["abbreviation"]); ?></td>
-            <td>
-              <a href="department_edit.php?id=<?php echo $d[
-                  "department_id"
-              ]; ?>">Edit</a>
-              <?php if ($_SESSION["role"] === "admin"): ?>
-               | <a href="department_delete.php?id=<?php echo $d[
-                   "department_id"
-               ]; ?>" onclick="return confirm('Delete this department?')">Delete</a>
-              <?php endif; ?>
-            </td>
-          </tr>
-          <?php endforeach;
-          ?>
+            $departments = pdo($pdo,
+                "SELECT d.*, COUNT(DISTINCT gp.project_id) AS project_count
+                FROM department d
+                LEFT JOIN research_dept rd ON d.department_id = rd.department_id
+                LEFT JOIN group_project gp ON rd.group_id = gp.group_id
+                GROUP BY d.department_id
+                ORDER BY d.name ASC"
+            );
+            foreach ($departments as $d): ?>
+            <tr>
+              <td><?php echo htmlspecialchars($d["department_id"]); ?></td>
+              <td><?php echo htmlspecialchars($d["name"]); ?></td>
+              <td><?php echo htmlspecialchars($d["abbreviation"]); ?></td>
+              <td>
+                <?php if ($d["project_count"] > 0): ?>
+                  <a href="projects.php?dept_id=<?php echo $d['department_id']; ?>">
+                    <?php echo (int)$d["project_count"]; ?> project<?php echo $d["project_count"] != 1 ? 's' : ''; ?>
+                  </a>
+                <?php else: ?>
+                  —
+                <?php endif; ?>
+              </td>
+            </tr>
+            <?php endforeach; ?>
         </tbody>
       </table>
     </div>
