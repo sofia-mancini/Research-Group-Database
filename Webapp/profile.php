@@ -567,12 +567,12 @@ require_login($logged_in);
 
       <!-- Quick links -->
       <div class="quick-links">
-        <a class="quick-link-btn" href="#">🧪 Experiments</a>
-        <a class="quick-link-btn" href="#">📁 Projects</a>
-        <a class="quick-link-btn" href="#">👥 Members</a>
-        <a class="quick-link-btn" href="#">📚 Literature</a>
-        <a class="quick-link-btn" href="#">✅ Tasks</a>
-        <a class="quick-link-btn" href="#">🏛️ Departments</a>
+        <a class="quick-link-btn" href="experiments.php">🧪 Experiments</a>
+        <a class="quick-link-btn" href="projects.php">📁 Projects</a>
+        <a class="quick-link-btn" href="members.php">👥 Members</a>
+        <a class="quick-link-btn" href="literature.php">📚 Literature</a>
+        <a class="quick-link-btn" href="tasks.php">✅ Tasks</a>
+        <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
       </div>
 
       <hr class="divider">
