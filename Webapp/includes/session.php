@@ -6,9 +6,9 @@ function login($user)                                   // Remember user passed 
     {
 session_regenerate_id(true);                        // Update session id
 $_SESSION['logged_in'] = true;                      // Set logged_in key to true
-$_SESSION['username'] = $user['email'];             // Use email as username
-$_SESSION['personID'] = $user['ID'];                // Store Person ID
-$_SESSION['role']     = $user['role'];              // Store role for authorization
+$_SESSION['username']  = $user['email'];            // Store email as username
+$_SESSION['personID']  = $user['ID'];               // Store Person.ID for permission checks
+$_SESSION['role']      = $user['role'];             // Store role for authorization
     }
 
 function require_login($logged_in)                      // Check if user logged in
@@ -23,6 +23,7 @@ function logout()                                       // Terminate the session
     {
 $_SESSION = [];                                     // Clear contents of array
 $params = session_get_cookie_params();              // Get session cookie parameters
+// Delete session cookie
 setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'],
 $params['secure'], $params['httponly']);
 session_destroy();                                  // Delete session file
@@ -30,14 +31,13 @@ session_destroy();                                  // Delete session file
 
 function authenticate(PDO $pdo, string $username, string $password)
     {
-$sql = "SELECT * FROM Person
-WHERE email = :username";               // Look up by email
+$sql  = "SELECT * FROM Person WHERE email = :username"; // Look up by email
 $stmt = $pdo->prepare($sql);
 $stmt->execute(['username' => $username]);
 $user = $stmt->fetch();
 if ($user && password_verify($password, $user['password'])) {
-return $user;                           // Return user if password matches
+return $user;                                   // Return user if password matches
         }
-return false;                               // Return false if no match
+return false;                                       // Return false if no match
     }
 // End of session.php – do NOT add any whitespace, new lines, or closing tag after this line

@@ -1,6 +1,7 @@
 <?php
 require_once "includes/session.php";
 require_once "includes/database-connection.php";
+require_once "includes/auth.php";
 require_login($logged_in);
 ?>
 <!DOCTYPE html>
@@ -173,12 +174,15 @@ require_login($logged_in);
             <td><?php echo htmlspecialchars($e["start_date"] ?? "—"); ?></td>
             <td><?php echo htmlspecialchars($e["end_date"] ?? "—"); ?></td>
             <td>
-              <a href="experiment_edit.php?id=<?php echo $e[
-                  "experiment_id"
-              ]; ?>">Edit</a> |
-              <a href="experiment_delete.php?id=<?php echo $e[
-                  "experiment_id"
-              ]; ?>" onclick="return confirm('Delete this experiment?')">Delete</a>
+                <?php if (can_edit_experiment($_SESSION['role'])): ?>
+                    <a href="experiment_edit.php?id=<?php echo $e['experiment_id']; ?>">Edit</a> |
+                <?php endif; ?>
+                <?php if (can_delete($_SESSION['role'])): ?>
+                    <a href="experiment_delete.php?id=<?php echo $e['experiment_id']; ?>" 
+                      onclick="return confirm('Delete this experiment?')">Delete</a>
+                <?php else: ?>
+                    <a href="#" onclick="alert('Access Denied: Only a Principal Investigator can delete records.'); return false;">Delete</a>
+                <?php endif; ?>
             </td>
           </tr>
           <?php
