@@ -436,6 +436,13 @@
     <!-- Window body -->
     <div class="window-body">
 
+      <?php if (isset($_GET['registered'])): ?>
+      <div class="error-box" style="background:#ccffcc;">
+        <div class="error-icon" style="color:#006600;">✔</div>
+        <div><strong>Account created.</strong><br>You can now log in with your credentials.</div>
+      </div>
+      <?php endif; ?>
+
       <?php if (isset($login_error)): ?>
       <div class="error-box">
         <div class="error-icon">!</div>
@@ -461,9 +468,13 @@
 
           <hr class="divider">
 
+          <div style="font-size:10px;margin-bottom:8px;text-align:center;">
+              New user? <a href="register.php" style="color:#000080;">Create an account</a>
+          </div>
+
           <div class="btn-row">
-            <button type="submit" class="win98-btn default">OK</button>
-            <button type="reset" class="win98-btn">Cancel</button>
+              <button type="submit" class="win98-btn default">OK</button>
+              <button type="reset" class="win98-btn">Cancel</button>
           </div>
         </form>
       </div>

@@ -14,10 +14,8 @@ $departments = pdo($pdo, "SELECT * FROM department ORDER BY name ASC")->fetchAll
 $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $name          = trim($_POST['name'] ?? '');
-    $email         = trim($_POST['email'] ?? '');
+    $person_id     = filter_input(INPUT_POST, 'person_id', FILTER_VALIDATE_INT);
     $role          = $_POST['role'] ?? '';
-    $password      = $_POST['password'] ?? '';
     $department_id = filter_input(INPUT_POST, 'department_id', FILTER_VALIDATE_INT) ?: null;
 
     $valid_roles = [
@@ -26,48 +24,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'Research Associate'
     ];
 
-    if (empty($name)) {
-        $error = 'Name is required.';
-    } elseif (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error = 'A valid email address is required.';
+    if (!$person_id) {
+        $error = 'Please select a user.';
     } elseif (!in_array($role, $valid_roles)) {
         $error = 'Invalid role selected.';
-    } elseif (strlen($password) < 8) {
-        $error = 'Password must be at least 8 characters.';
     } else {
-        // Check for duplicate email
-        $existing = pdo($pdo, "SELECT ID FROM Person WHERE email = :email", ['email' => $email])->fetch();
-        if ($existing) {
-            $error = 'A member with that email already exists.';
-        } else {
-            $hashed = password_hash($password, PASSWORD_BCRYPT);
+        // Update the role
+        pdo($pdo,
+            "UPDATE Person SET role = :role WHERE ID = :id",
+            ['role' => $role, 'id' => $person_id]
+        );
 
+        // Update department assignment
+        pdo($pdo, "DELETE FROM person_dept WHERE person_id = :id", ['id' => $person_id]);
+        if ($department_id) {
             pdo($pdo,
-                "INSERT INTO Person (name, email, role, password)
-                 VALUES (:name, :email, :role, :password)",
-                ['name' => $name, 'email' => $email, 'role' => $role, 'password' => $hashed]
+                "INSERT INTO person_dept (person_id, department_id) VALUES (:person_id, :dept_id)",
+                ['person_id' => $person_id, 'dept_id' => $department_id]
             );
-
-            $new_id = $pdo->lastInsertId();
-
-            if ($department_id && $new_id) {
-                pdo($pdo,
-                    "INSERT INTO person_dept (person_id, department_id) VALUES (:person_id, :dept_id)",
-                    ['person_id' => $new_id, 'dept_id' => $department_id]
-                );
-            }
-
-            header('Location: members.php?added=1');
-            exit;
         }
+
+        header('Location: members.php?added=1');
+        exit;
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>New Member — Research Group DB</title>
+  <title>Assign Member — Research Group DB</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif; font-size: 11px; background-color: #008080; background-image: repeating-linear-gradient(45deg, rgba(0,0,0,0.03) 0px, rgba(0,0,0,0.03) 1px, transparent 1px, transparent 4px); min-height: 100vh; display: flex; flex-direction: column; align-items: center; padding: 16px 16px 40px; color: #000; }
@@ -120,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
   <div class="ie-window">
     <div class="title-bar">
-      <div class="title-bar-text">➕ New Member: Research Group Database — Microsoft Internet Explorer</div>
+      <div class="title-bar-text">➕ Assign Member Role: Research Group Database — Microsoft Internet Explorer</div>
       <div class="title-bar-controls">
         <div class="win-btn">_</div><div class="win-btn">□</div>
         <a href="members.php" class="win-btn">✕</a>
@@ -139,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </div>
     <div class="ie-content">
       <div class="page-header">
-        <h1>➕ New Member</h1>
+        <h1>➕ Reassign User Role</h1>
         <div class="page-header-right">
           Logged in as: <strong><?php echo htmlspecialchars($_SESSION['username']); ?></strong><br>
           Role: <strong><?php echo htmlspecialchars($_SESSION['role']); ?></strong>
@@ -149,47 +136,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       <div class="banner error"><span class="banner-icon">!</span><div><strong>Error:</strong> <?php echo htmlspecialchars($error); ?></div></div>
       <?php endif; ?>
       <form method="POST" action="member_add.php">
-        <div class="form-panel">
-          <div class="form-panel-title">Member Details</div>
-          <div class="form-row">
-            <label for="name">Name: *</label>
-            <input type="text" id="name" name="name" required value="<?php echo htmlspecialchars($_POST['name'] ?? ''); ?>">
-          </div>
-          <div class="form-row">
-            <label for="email">Email: *</label>
-            <input type="email" id="email" name="email" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
-          </div>
-          <div class="form-row">
-            <label for="password">Password: *</label>
-            <div style="flex:1;">
-              <input type="password" id="password" name="password" required style="width:100%;">
-              <div class="field-hint">Minimum 8 characters</div>
-            </div>
-          </div>
-          <div class="form-row">
-            <label for="role">Role: *</label>
-            <select id="role" name="role">
-              <?php foreach ([
-                  'Principal Investigator', 'Senior Researcher', 'Researcher',
-                  'Lead Data Scientist', 'Lead Engineer',
-                  'Postdoctoral Fellow', 'Research Associate'
-              ] as $r): ?>
-                <option value="<?php echo $r; ?>" <?php echo ($_POST['role'] ?? '') === $r ? 'selected' : ''; ?>><?php echo $r; ?></option>
-              <?php endforeach; ?>
+      <div class="form-panel">
+        <div class="form-panel-title">Reassign User Role</div>
+
+        <div class="form-row">
+            <label for="person_id">User: *</label>
+            <select id="person_id" name="person_id">
+            <option value="">— Select a user —</option>
+            <?php
+            // Show all users who are currently viewers (role = 'Viewer' or not in member roles)
+            $viewers = pdo($pdo,
+                "SELECT ID, name, email, role FROM Person
+                ORDER BY name ASC"
+            )->fetchAll();
+            foreach ($viewers as $v): ?>
+                <option value="<?php echo $v['ID']; ?>"
+                <?php echo ($_POST['person_id'] ?? '') == $v['ID'] ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($v['name']); ?> 
+                — <?php echo htmlspecialchars($v['email']); ?>
+                (<?php echo htmlspecialchars($v['role']); ?>)
+                </option>
+            <?php endforeach; ?>
             </select>
-          </div>
-          <div class="form-row">
+        </div>
+
+        <div class="form-row">
+            <label for="role">Assign Role: *</label>
+            <select id="role" name="role">
+            <?php foreach ([
+                'Principal Investigator', 'Senior Researcher', 'Researcher',
+                'Lead Data Scientist', 'Lead Engineer',
+                'Postdoctoral Fellow', 'Research Associate'
+            ] as $r): ?>
+                <option value="<?php echo $r; ?>"
+                <?php echo ($_POST['role'] ?? '') === $r ? 'selected' : ''; ?>>
+                <?php echo $r; ?>
+                </option>
+            <?php endforeach; ?>
+            </select>
+        </div>
+
+        <div class="form-row">
             <label for="department_id">Department:</label>
             <select id="department_id" name="department_id">
-              <option value="">— None —</option>
-              <?php foreach ($departments as $d): ?>
+            <option value="">— None —</option>
+            <?php foreach ($departments as $d): ?>
                 <option value="<?php echo $d['department_id']; ?>"
-                  <?php echo ($_POST['department_id'] ?? '') == $d['department_id'] ? 'selected' : ''; ?>>
-                  <?php echo htmlspecialchars($d['name']); ?> (<?php echo htmlspecialchars($d['abbreviation']); ?>)
+                <?php echo ($_POST['department_id'] ?? '') == $d['department_id'] ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($d['name']); ?> (<?php echo htmlspecialchars($d['abbreviation']); ?>)
                 </option>
-              <?php endforeach; ?>
+            <?php endforeach; ?>
             </select>
-          </div>
+        </div>
+
         </div>
         <hr class="divider">
         <div class="btn-row">
@@ -206,7 +205,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </div>
   <div class="taskbar">
     <button class="start-btn"><div class="start-logo"><span></span><span></span><span></span><span></span></div>Start</button>
-    <div class="taskbar-active">➕ New Member: Research Group Database</div>
+    <div class="taskbar-active">➕ Assign Member Role: Research Group Database</div>
     <div class="taskbar-clock" id="clock">12:00 PM</div>
   </div>
   <script>
