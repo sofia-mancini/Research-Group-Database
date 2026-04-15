@@ -123,7 +123,7 @@ body { font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif;
     <?php endif; ?>
 
     <?php if (is_admin($_SESSION['role'])): ?>
-    <button class="toolbar-action" onclick="window.location='member_add.php'">➕ New Member</button>
+    <button class="toolbar-action" onclick="window.location='member_add.php'">➕ Assign Member to Role</button>
     <?php endif; ?>
 
     <table class="data-table">
