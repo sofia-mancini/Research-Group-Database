@@ -150,7 +150,11 @@ body { font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif;
         foreach ($members as $m): ?>
         <tr>
           <td><?php echo htmlspecialchars($m["ID"]); ?></td>
-          <td><?php echo htmlspecialchars($m["name"]); ?></td>
+          <td>
+            <a href="member_view.php?id=<?php echo $m['ID']; ?>">
+              <?php echo htmlspecialchars($m["name"]); ?>
+            </a>
+          </td>
           <td><?php echo htmlspecialchars($m["email"] ?? "—"); ?></td>
           <td><?php echo htmlspecialchars($m["role"] ?? "—"); ?></td>
           <td>
