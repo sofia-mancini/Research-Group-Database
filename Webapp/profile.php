@@ -586,21 +586,17 @@ require_login($logged_in);
               <?php
               $projects = pdo(
                   $pdo,
-                  "SELECT title, status FROM project WHERE status = 'Active' LIMIT 4",
+                  "SELECT project_id, title, status FROM project WHERE status = 'Active' LIMIT 4",
               );
               foreach ($projects as $project): ?>
                 <div class="panel-row">
-                  <span class="panel-link"><?php echo htmlspecialchars(
-                      $project["title"],
-                  ); ?></span>
-                  <span><?php echo htmlspecialchars(
-                      $project["status"],
-                  ); ?></span>
+                  <a class="panel-link" href="project_view.php?id=<?php echo $project['project_id']; ?>"><?php echo htmlspecialchars($project["title"]); ?></a>
+                  <span><?php echo htmlspecialchars($project["status"]); ?></span>
                 </div>
               <?php endforeach;
               ?>
               <div class="panel-row" style="padding-top:6px;">
-                <a class="panel-link" href="#">View all projects »</a>
+                <a class="panel-link" href="projects.php">View all projects »</a>
               </div>
             </div>
         </div>
@@ -611,19 +607,17 @@ require_login($logged_in);
             <?php
             $tasks = pdo(
                 $pdo,
-                "SELECT title, status, progress FROM task ORDER BY task_id DESC LIMIT 4",
+                "SELECT task_id, title, status, progress FROM task ORDER BY task_id DESC LIMIT 4",
             );
             foreach ($tasks as $task): ?>
               <div class="panel-row">
-                <span class="panel-link"><?php echo htmlspecialchars(
-                    $task["title"],
-                ); ?></span>
+                <a class="panel-link" href="task_view.php?id=<?php echo $task['task_id']; ?>"><?php echo htmlspecialchars($task["title"]); ?></a>
                 <span><?php echo htmlspecialchars($task["status"]); ?></span>
               </div>
             <?php endforeach;
             ?>
             <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all projects »</a>
+              <a class="panel-link" href="tasks.php">View all tasks »</a>
             </div>
           </div>
         </div>
@@ -634,21 +628,17 @@ require_login($logged_in);
             <?php
             $experiments = pdo(
                 $pdo,
-                "SELECT title, status FROM experiment ORDER BY experiment_id DESC LIMIT 4",
+                "SELECT experiment_id, title, status FROM experiment ORDER BY experiment_id DESC LIMIT 4",
             );
             foreach ($experiments as $experiment): ?>
               <div class="panel-row">
-                <span class="panel-link"><?php echo htmlspecialchars(
-                    $experiment["title"],
-                ); ?></span>
-                <span><?php echo htmlspecialchars(
-                    $experiment["status"],
-                ); ?></span>
+                <a class="panel-link" href="experiment_view.php?id=<?php echo $experiment['experiment_id']; ?>"><?php echo htmlspecialchars($experiment["title"]); ?></a>
+                <span><?php echo htmlspecialchars($experiment["status"]); ?></span>
               </div>
             <?php endforeach;
             ?>
             <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all projects »</a>
+              <a class="panel-link" href="experiments.php">View all experiments »</a>
             </div>
           </div>
         </div>
@@ -659,19 +649,17 @@ require_login($logged_in);
             <?php
             $literature = pdo(
                 $pdo,
-                "SELECT title, year FROM literature ORDER BY lit_id DESC LIMIT 4",
+                "SELECT lit_id, title, year FROM literature ORDER BY lit_id DESC LIMIT 4",
             );
             foreach ($literature as $lit): ?>
               <div class="panel-row">
-                <span class="panel-link"><?php echo htmlspecialchars(
-                    $lit["title"],
-                ); ?></span>
+                <a class="panel-link" href="literature_view.php?id=<?php echo $lit['lit_id']; ?>"><?php echo htmlspecialchars($lit["title"]); ?></a>
                 <span><?php echo htmlspecialchars($lit["year"]); ?></span>
               </div>
             <?php endforeach;
             ?>
             <div class="panel-row" style="padding-top:6px;">
-              <a class="panel-link" href="#">View all projects »</a>
+              <a class="panel-link" href="literature.php">View all literature »</a>
             </div>
           </div>
         </div>
