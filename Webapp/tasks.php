@@ -172,7 +172,7 @@ require_login($logged_in);
             </td>
             <td><?php echo htmlspecialchars($t["due_date"] ?? "—"); ?></td>
             <td>
-                <?php if (can_edit_task($_SESSION['role'], $_SESSION['personID'], $t['task_id'], $pdo)): ?>
+                <?php if (can_edit_task($_SESSION['role'], $_SESSION['person_id'], $t['task_id'], $pdo)): ?>
                     <a href="task_edit.php?id=<?php echo $t['task_id']; ?>">Edit</a> |
                 <?php endif; ?>
                 <?php if (can_delete($_SESSION['role'])): ?>

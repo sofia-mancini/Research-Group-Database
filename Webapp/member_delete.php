@@ -20,7 +20,7 @@ if (!$id) {
 }
 
 // Prevent admin from deleting their own account
-if ($id === (int)$_SESSION['personID']) {
+if ($id === (int)$_SESSION['person_id']) {
     header('Location: members.php?error=selfdelete');
     exit;
 }

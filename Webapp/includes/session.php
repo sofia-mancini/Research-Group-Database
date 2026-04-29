@@ -35,3 +35,16 @@ function require_login(bool $logged_in): void
         exit;
     }
 }
+
+function authenticate(PDO $pdo, string $username, string $password)
+    {
+$sql  = "SELECT * FROM Person WHERE email = :username"; // Look up by email
+$stmt = $pdo->prepare($sql);
+$stmt->execute(['username' => $username]);
+$user = $stmt->fetch();
+if ($user && password_verify($password, $user['password'])) {
+return $user;                                   // Return user if password matches
+        }
+return false;                                       // Return false if no match
+    }
+// End of session.php – do NOT add any whitespace, new lines, or closing tag after this line
