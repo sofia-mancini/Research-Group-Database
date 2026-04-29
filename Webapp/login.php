@@ -1,4 +1,6 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
   require_once 'includes/session.php';
   require_once 'includes/database-connection.php';
   if ($logged_in) {
