@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/keelyfowler/Downloads/**)",
+      "Bash(git -C /Users/keelyfowler/Documents/URI/URI_S26/CSC_436/group-project/Research-Group-Database diff HEAD Webapp/includes/auth.php Webapp/task_view.php)"
+    ]
+  }
+}

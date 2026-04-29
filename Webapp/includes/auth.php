@@ -87,13 +87,13 @@ function can_edit_research_group(string $role): bool
 //   (b) a member of the project that encompasses that task
 // -------------------------------------------------------------
 
-function can_edit_task(string $role, int $person_id, int $task_id, PDO $pdo): bool
+function can_edit_task(string $role, ?int $person_id, int $task_id, PDO $pdo): bool
 {
     if (is_admin($role)) {
         return true;
     }
 
-    if (!is_member($role)) {
+    if (!is_member($role) || $person_id === null) {
         return false;
     }
 

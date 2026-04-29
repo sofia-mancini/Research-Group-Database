@@ -3,6 +3,8 @@ require_once "includes/session.php";
 require_once "includes/database-connection.php";
 require_once "includes/auth.php";
 
+require_login($logged_in);
+
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) { header('Location: tasks.php'); exit; }
 
