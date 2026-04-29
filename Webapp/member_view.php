@@ -6,7 +6,7 @@ require_once "includes/auth.php";
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) { header('Location: members.php'); exit; }
 
-$member = pdo($pdo, "SELECT * FROM person WHERE ID = :id", ['id' => $id])->fetch();
+$member = pdo($pdo, "SELECT * Person WHERE ID = :id", ['id' => $id])->fetch();
 if (!$member) { header('Location: members.php'); exit; }
 
 $deptRows = pdo($pdo,
@@ -250,12 +250,12 @@ $taskRows = pdo($pdo,
                 <thead><tr><th>Title</th><th>Status</th><th>Progress</th></tr></thead>
                 <tbody>
                   <?php foreach ($taskRows as $t):
-                    $tsc = match(strtolower($t['status'])) {
-                      'completed'   => 'status-completed',
-                      'in progress' => 'status-active',
-                      'not started' => 'status-pending',
-                      'cancelled'   => 'status-cancelled',
-                      default       => ''
+                    $tsc = match(strtolower($t['status'] ?? '')) {
+                        'completed'   => 'status-completed',
+                        'in progress' => 'status-active',
+                        'not started' => 'status-pending',
+                        'cancelled'   => 'status-cancelled',
+                        default       => ''
                     };
                     $prog = (int)($t['progress'] ?? 0);
                   ?>

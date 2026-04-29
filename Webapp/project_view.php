@@ -11,7 +11,7 @@ if (!$project) { header('Location: projects.php'); exit; }
 
 $memberRows = pdo($pdo,
     "SELECT p.ID, p.name, p.email, pm.role
-     FROM person p
+     FROM Person p
      JOIN project_member pm ON p.ID = pm.person_id
      WHERE pm.project_id = :id
      ORDER BY p.name",
