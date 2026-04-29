@@ -14,14 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
-
---
--- GTID state at the beginning of the backup 
---
-
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'f22bcb86-0826-11f1-bac1-7c9a91097841:1-193';
 
 --
 -- Table structure for table `department`
@@ -60,7 +52,7 @@ CREATE TABLE `department_test` (
   `name` varchar(100) NOT NULL,
   `abbreviation` varchar(20) NOT NULL,
   PRIMARY KEY (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -577,10 +569,10 @@ UNLOCK TABLES;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `member_contact_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`p`.`email` AS `email`,`pg`.`role` AS `role`,`rg`.`name` AS `group_name` from ((`person` `p` join `person_group` `pg` on((`p`.`ID` = `pg`.`person_id`))) join `research_group` `rg` on((`pg`.`group_id` = `rg`.`group_id`))) */;
+
+/*!50001 VIEW `member_contact_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`p`.`email` AS `email`,`pg`.`role` AS `role`,`rg`.`name` AS `group_name` from ((`Person` `p` join `person_group` `pg` on((`p`.`ID` = `pg`.`person_id`))) join `research_group` `rg` on((`pg`.`group_id` = `rg`.`group_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -595,14 +587,13 @@ UNLOCK TABLES;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `project_access_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`pm`.`role` AS `project_role`,`proj`.`project_id` AS `project_id`,`proj`.`title` AS `title`,`proj`.`description` AS `description`,`proj`.`status` AS `status`,`proj`.`start_date` AS `start_date`,`proj`.`end_date` AS `end_date` from ((`person` `p` join `project_member` `pm` on((`p`.`ID` = `pm`.`person_id`))) join `project` `proj` on(((`pm`.`role` = 'Project Lead') or (`proj`.`project_id` = `pm`.`project_id`)))) */;
+
+/*!50001 VIEW `project_access_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`pm`.`role` AS `project_role`,`proj`.`project_id` AS `project_id`,`proj`.`title` AS `title`,`proj`.`description` AS `description`,`proj`.`status` AS `status`,`proj`.`start_date` AS `start_date`,`proj`.`end_date` AS `end_date` from ((`Person` `p` join `project_member` `pm` on((`p`.`ID` = `pm`.`person_id`))) join `project` `proj` on(((`pm`.`role` = 'Project Lead') or (`proj`.`project_id` = `pm`.`project_id`)))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
