@@ -33,7 +33,7 @@ require_login($logged_in);
     .page-header { background: linear-gradient(90deg, #000080, #1084d0); color: #fff; padding: 10px 16px; margin: -16px -16px 16px -16px; display: flex; align-items: center; justify-content: space-between; }
     .page-header h1 { font-size: 16px; font-weight: bold; font-family: "Times New Roman", serif; }
     .page-header-right { font-size: 11px; text-align: right; line-height: 1.6; }
-    .quick-links { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .quick-links { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; align-items: center; }
     .quick-link-btn { padding: 3px 12px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; font-family: inherit; font-size: 11px; cursor: pointer; text-decoration: none; color: #000; display: flex; align-items: center; gap: 4px; }
     .divider { border: none; border-top: 1px solid #808080; border-bottom: 1px solid #fff; margin: 10px 0; }
     .toolbar-action { padding: 3px 10px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; font-family: inherit; font-size: 11px; cursor: pointer; display: flex; align-items: center; gap: 4px; text-decoration: none; color: #000; margin-bottom: 10px; }
@@ -109,6 +109,12 @@ require_login($logged_in);
         <a class="quick-link-btn" href="literature.php">📚 Literature</a>
         <a class="quick-link-btn" href="tasks.php" style="border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;">✅ Tasks</a>
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
+        <a class="quick-link-btn" href="search.php">🔍 Search</a>
+        <form action="search.php" method="GET" style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+          <input type="text" name="q" placeholder="Search..."
+                 style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
+          <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
+        </form>
       </div>
       <hr class="divider">
 
