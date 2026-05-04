@@ -1,5 +1,5 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/keely.rhody.dev/public_html/researchdb 
+    - export DEPLOYPATH=/home/keelyfowler/public_html/researchdb 
     - /bin/cp -R * $DEPLOYPATH
