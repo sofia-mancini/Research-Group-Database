@@ -299,6 +299,7 @@ require_login($logged_in);
       gap: 8px;
       flex-wrap: wrap;
       margin-bottom: 16px;
+      align-items: center;
     }
 
     .quick-link-btn {
@@ -573,6 +574,12 @@ require_login($logged_in);
         <a class="quick-link-btn" href="literature.php">📚 Literature</a>
         <a class="quick-link-btn" href="tasks.php">✅ Tasks</a>
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
+        <a class="quick-link-btn" href="search.php">🔍 Search</a>
+        <form action="search.php" method="GET" style="margin-left:auto;display:flex;align-items:center;gap:4px;">
+          <input type="text" name="q" placeholder="Search..."
+                 style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
+          <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
+        </form>
       </div>
 
       <hr class="divider">
