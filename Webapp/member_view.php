@@ -6,7 +6,7 @@ require_once "includes/auth.php";
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 if (!$id) { header('Location: members.php'); exit; }
 
-$member = pdo($pdo, "SELECT * Person WHERE ID = :id", ['id' => $id])->fetch();
+$member = pdo($pdo, "SELECT * FROM Person WHERE ID = :id", ['id' => $id])->fetch();
 if (!$member) { header('Location: members.php'); exit; }
 
 $deptRows = pdo($pdo,

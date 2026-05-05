@@ -334,7 +334,7 @@ SET @saved_cs_client     = @@character_set_client;
 SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
        proj.project_id, proj.title, proj.description, proj.status,
        proj.start_date, proj.end_date
-FROM person p
+FROM Person p
 JOIN project_member pm ON p.ID = pm.person_id
 JOIN project proj ON proj.project_id = pm.project_id
 
@@ -343,7 +343,7 @@ UNION
 SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
        proj.project_id, proj.title, proj.description, proj.status,
        proj.start_date, proj.end_date
-FROM person p
+FROM Person p
 JOIN project_member pm ON p.ID = pm.person_id
 JOIN project proj ON pm.role = 'Project Lead'*/;
 SET character_set_client = @saved_cs_client;
@@ -609,7 +609,7 @@ UNLOCK TABLES;
 SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
        proj.project_id, proj.title, proj.description, proj.status,
        proj.start_date, proj.end_date
-FROM person p
+FROM Person p
 JOIN project_member pm ON p.ID = pm.person_id
 JOIN project proj ON proj.project_id = pm.project_id
 
@@ -618,7 +618,7 @@ UNION
 SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
        proj.project_id, proj.title, proj.description, proj.status,
        proj.start_date, proj.end_date
-FROM person p
+FROM Person p
 JOIN project_member pm ON p.ID = pm.person_id
 JOIN project proj ON pm.role = 'Project Lead' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
