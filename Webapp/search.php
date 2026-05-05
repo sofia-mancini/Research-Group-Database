@@ -7,12 +7,13 @@ require_login($logged_in);
 $q        = trim($_GET['q'] ?? '');
 $searched = array_key_exists('q', $_GET);
 
-$projects = $tasks = $experiments = $literature = [];
+$projects = $tasks = $members = $experiments = $literature = [];
 
 if ($searched && $q !== '') {
     $term = '%' . $q . '%';
     $projects    = pdo($pdo, "SELECT * FROM project    WHERE title LIKE :t1 OR description LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
     $tasks       = pdo($pdo, "SELECT * FROM task       WHERE title LIKE :t1 OR description LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
+    $members     = pdo($pdo, "SELECT * FROM Person     WHERE name  LIKE :t1 OR email       LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
     $experiments = pdo($pdo, "SELECT * FROM experiment WHERE title LIKE :t1 OR objective  LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
     $literature  = pdo($pdo, "SELECT * FROM literature WHERE title LIKE :t1 OR journal    LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
 }
@@ -167,7 +168,7 @@ function sc(string $status): string {
           🔍 Enter a search term above to search across all research data.
         </div>
 
-      <?php elseif (empty($projects) && empty($tasks) && empty($experiments) && empty($literature)): ?>
+      <?php elseif (empty($projects) && empty($tasks) && empty($members) && empty($experiments) && empty($literature)): ?>
 
         <div style="text-align:center;padding:40px 0;color:#555;font-size:13px;">
           No results found for &ldquo;<?php echo htmlspecialchars($q); ?>&rdquo;.
@@ -178,6 +179,7 @@ function sc(string $status): string {
         <?php
           $pCnt = count($projects);    $pOpen = $pCnt > 0;
           $tCnt = count($tasks);       $tOpen = $tCnt > 0;
+          $mCnt = count($members);     $mOpen = $mCnt > 0;
           $eCnt = count($experiments); $eOpen = $eCnt > 0;
           $lCnt = count($literature);  $lOpen = $lCnt > 0;
         ?>
@@ -226,6 +228,30 @@ function sc(string $status): string {
                     <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:<?php echo $prog; ?>%"></div></div>
                     <span style="margin-left:3px;font-size:10px;"><?php echo $prog; ?>%</span>
                   </td>
+                </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+            <?php endif; ?>
+          </div>
+        </div>
+
+        <!-- Members -->
+        <div class="result-section">
+          <div class="section-hdr" onclick="toggleSection('members')">
+            <span>👤 Members (<?php echo $mCnt; ?> <?php echo $mCnt === 1 ? 'result' : 'results'; ?>)</span>
+            <span id="arrow-members"><?php echo $mOpen ? '▲' : '▼'; ?></span>
+          </div>
+          <div id="body-members"<?php echo $mOpen ? '' : ' style="display:none"'; ?>>
+            <?php if ($mCnt > 0): ?>
+            <table class="data-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Role</th></tr></thead>
+              <tbody>
+                <?php foreach ($members as $m): ?>
+                <tr>
+                  <td><a href="member_view.php?id=<?php echo $m['ID']; ?>"><?php echo htmlspecialchars($m['name']); ?></a></td>
+                  <td><?php echo htmlspecialchars($m['email'] ?? '—'); ?></td>
+                  <td><?php echo htmlspecialchars($m['role'] ?? '—'); ?></td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>

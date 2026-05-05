@@ -3,6 +3,14 @@ require_once "includes/session.php";
 require_once "includes/database-connection.php";
 require_once "includes/auth.php";
 require_login($logged_in);
+
+$status_filter = trim($_GET['status'] ?? '');
+if (!in_array($status_filter, ['Not Started', 'In Progress', 'Completed', 'Cancelled'], true)) {
+    $status_filter = '';
+}
+
+$sql   = "SELECT * FROM task" . ($status_filter ? " WHERE status = :status" : "") . " ORDER BY task_id DESC";
+$tasks = $status_filter ? pdo($pdo, $sql, ['status' => $status_filter]) : pdo($pdo, $sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -87,7 +95,7 @@ require_login($logged_in);
     </div>
     <div class="address-bar">
       <span class="address-label">Address</span>
-      <input class="address-input" type="text" value="http://localhost/researchdb/tasks.php" readonly>
+      <input class="address-input" type="text" value="http://localhost/researchdb/tasks.php<?php echo $status_filter ? '?status=' . urlencode($status_filter) : ''; ?>" readonly>
       <button class="go-btn">Go</button>
     </div>
     <div class="ie-content">
@@ -110,11 +118,24 @@ require_login($logged_in);
         <a class="quick-link-btn" href="tasks.php" style="border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;">✅ Tasks</a>
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
         <a class="quick-link-btn" href="search.php">🔍 Search</a>
-        <form action="search.php" method="GET" style="margin-left:auto;display:flex;align-items:center;gap:4px;">
-          <input type="text" name="q" placeholder="Search..."
-                 style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
-          <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
-        </form>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+          <form action="tasks.php" method="GET" style="display:flex;align-items:center;gap:4px;">
+            <label style="font-size:11px;white-space:nowrap;">Status:</label>
+            <select name="status" onchange="this.form.submit()"
+                    style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 2px;font-family:inherit;font-size:11px;cursor:pointer;">
+              <option value="">All</option>
+              <option value="Not Started" <?php echo $status_filter === 'Not Started' ? 'selected' : ''; ?>>Not Started</option>
+              <option value="In Progress" <?php echo $status_filter === 'In Progress' ? 'selected' : ''; ?>>In Progress</option>
+              <option value="Completed"   <?php echo $status_filter === 'Completed'   ? 'selected' : ''; ?>>Completed</option>
+              <option value="Cancelled"   <?php echo $status_filter === 'Cancelled'   ? 'selected' : ''; ?>>Cancelled</option>
+            </select>
+          </form>
+          <form action="search.php" method="GET" style="display:flex;align-items:center;gap:4px;">
+            <input type="text" name="q" placeholder="Search..."
+                   style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
+            <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
+          </form>
+        </div>
       </div>
       <hr class="divider">
 
@@ -150,7 +171,6 @@ require_login($logged_in);
         </thead>
         <tbody>
           <?php
-          $tasks = pdo($pdo, "SELECT * FROM task ORDER BY task_id DESC");
           foreach ($tasks as $t):
 
               $statusClass = match (strtolower($t["status"])) {

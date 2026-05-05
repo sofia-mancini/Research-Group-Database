@@ -4,20 +4,35 @@ require_once "includes/database-connection.php";
 require_once "includes/auth.php";
 require_login($logged_in);
 
-// Define dept filter here so it's available throughout the page
-$dept_filter = filter_input(INPUT_GET, 'dept_id', FILTER_VALIDATE_INT);
+$dept_filter   = filter_input(INPUT_GET, 'dept_id', FILTER_VALIDATE_INT);
+$status_filter = trim($_GET['status'] ?? '');
+if (!in_array($status_filter, ['Active', 'Completed', 'Cancelled', 'On Hold'], true)) {
+    $status_filter = '';
+}
 
-$sql = $dept_filter
-    ? "SELECT DISTINCT p.* FROM project p
-       JOIN group_project gp ON p.project_id = gp.project_id
-       JOIN research_dept rd ON gp.group_id = rd.group_id
-       WHERE rd.department_id = :dept_id
-       ORDER BY p.project_id DESC"
-    : "SELECT * FROM project ORDER BY project_id DESC";
+if ($dept_filter) {
+    $sql  = "SELECT DISTINCT p.* FROM project p
+             JOIN group_project gp ON p.project_id = gp.project_id
+             JOIN research_dept rd ON gp.group_id = rd.group_id
+             WHERE rd.department_id = :dept_id"
+          . ($status_filter ? " AND p.status = :status" : "")
+          . " ORDER BY p.project_id DESC";
+    $args = ['dept_id' => $dept_filter];
+    if ($status_filter) $args['status'] = $status_filter;
+    $projects = pdo($pdo, $sql, $args);
+} else {
+    $sql  = "SELECT * FROM project"
+          . ($status_filter ? " WHERE status = :status" : "")
+          . " ORDER BY project_id DESC";
+    $projects = $status_filter
+        ? pdo($pdo, $sql, ['status' => $status_filter])
+        : pdo($pdo, $sql);
+}
 
-$projects = $dept_filter
-    ? pdo($pdo, $sql, ['dept_id' => $dept_filter])
-    : pdo($pdo, $sql);
+$proj_qs_parts = [];
+if ($dept_filter)   $proj_qs_parts[] = 'dept_id=' . $dept_filter;
+if ($status_filter) $proj_qs_parts[] = 'status=' . urlencode($status_filter);
+$proj_qs = $proj_qs_parts ? '?' . implode('&', $proj_qs_parts) : '';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -102,7 +117,7 @@ $projects = $dept_filter
     </div>
     <div class="address-bar">
       <span class="address-label">Address</span>
-      <input class="address-input" type="text" value="http://localhost/researchdb/projects.php<?php echo $dept_filter ? '?dept_id='.$dept_filter : ''; ?>" readonly>
+      <input class="address-input" type="text" value="http://localhost/researchdb/projects.php<?php echo $proj_qs; ?>" readonly>
       <button class="go-btn">Go</button>
     </div>
     <div class="ie-content">
@@ -122,11 +137,25 @@ $projects = $dept_filter
         <a class="quick-link-btn" href="tasks.php">✅ Tasks</a>
         <a class="quick-link-btn" href="departments.php">🏛️ Departments</a>
         <a class="quick-link-btn" href="search.php">🔍 Search</a>
-        <form action="search.php" method="GET" style="margin-left:auto;display:flex;align-items:center;gap:4px;">
-          <input type="text" name="q" placeholder="Search..."
-                 style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
-          <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
-        </form>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
+          <form action="projects.php" method="GET" style="display:flex;align-items:center;gap:4px;">
+            <?php if ($dept_filter): ?><input type="hidden" name="dept_id" value="<?php echo $dept_filter; ?>"><?php endif; ?>
+            <label style="font-size:11px;white-space:nowrap;">Status:</label>
+            <select name="status" onchange="this.form.submit()"
+                    style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 2px;font-family:inherit;font-size:11px;cursor:pointer;">
+              <option value="">All</option>
+              <option value="Active"    <?php echo $status_filter === 'Active'    ? 'selected' : ''; ?>>Active</option>
+              <option value="Completed" <?php echo $status_filter === 'Completed' ? 'selected' : ''; ?>>Completed</option>
+              <option value="Cancelled" <?php echo $status_filter === 'Cancelled' ? 'selected' : ''; ?>>Cancelled</option>
+              <option value="On Hold"   <?php echo $status_filter === 'On Hold'   ? 'selected' : ''; ?>>On Hold</option>
+            </select>
+          </form>
+          <form action="search.php" method="GET" style="display:flex;align-items:center;gap:4px;">
+            <input type="text" name="q" placeholder="Search..."
+                   style="height:20px;background:#fff;border-top:2px solid #808080;border-left:2px solid #808080;border-right:2px solid #fff;border-bottom:2px solid #fff;padding:0 4px;font-family:inherit;font-size:11px;width:130px;">
+            <button type="submit" style="padding:1px 6px;height:20px;background:#c0c0c0;border-top:1px solid #fff;border-left:1px solid #fff;border-right:1px solid #808080;border-bottom:1px solid #808080;font-family:inherit;font-size:11px;cursor:pointer;">🔍</button>
+          </form>
+        </div>
       </div>
 
       <hr class="divider">
