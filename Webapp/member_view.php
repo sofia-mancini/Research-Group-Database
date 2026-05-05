@@ -107,7 +107,7 @@ $taskRows = pdo($pdo,
     .subtable-body a:hover { color: #ff0000; }
     .empty-notice { color: #555; font-style: italic; padding: 8px 6px; font-size: 11px; }
     .progress-bar-outer { background: #fff; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; height: 12px; width: 80px; display: inline-block; vertical-align: middle; }
-    .progress-bar-inner { background: linear-gradient(90deg, #fff 0%, #1084d0 60%, #000080 100%); height: 100%; }
+    .progress-bar-inner { background: linear-gradient(90deg, #0D74C6, #06329E); height: 100%; }
     /* Role badge */
     .role-badge { display: inline-block; padding: 1px 8px; background: #000080; color: #fff; font-size: 10px; }
   </style>

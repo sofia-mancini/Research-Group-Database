@@ -58,7 +58,7 @@ $tasks = $status_filter ? pdo($pdo, $sql, ['status' => $status_filter]) : pdo($p
     .status-pending { background: #ffffcc; border-color: #999900; color: #666600; }
     .status-cancelled { background: #ffcccc; border-color: #990000; color: #660000; }
     .progress-bar-outer { width: 80px; height: 12px; background: #fff; border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; display: inline-block; vertical-align: middle; }
-    .progress-bar-inner { height: 100%; background: #000080; }
+    .progress-bar-inner { height: 100%; background: linear-gradient(90deg, #0D74C6, #06329E); }
     .ie-status { border-top: 1px solid #808080; padding: 2px 6px; display: flex; align-items: center; gap: 4px; background: #c0c0c0; }
     .status-panel { border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; padding: 1px 6px; font-size: 10px; }
     .taskbar { position: fixed; bottom: 0; left: 0; right: 0; height: 28px; background: #c0c0c0; border-top: 2px solid #fff; display: flex; align-items: center; padding: 0 4px; gap: 4px; z-index: 100; }

@@ -70,7 +70,7 @@ $exptRows = pdo($pdo,
     .quick-link-btn:active { border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; }
     .divider { border: none; border-top: 1px solid #808080; border-bottom: 1px solid #fff; margin: 10px 0; }
     .toolbar-action { padding: 3px 10px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; font-family: inherit; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #000; margin-bottom: 10px; }
-    .status-badge { padding: 1px 6px; font-size: 10px; border: 1px solid; }
+    .status-badge { padding: 1px 6px; font-size: 10px; border: 1px solid; white-space: nowrap; }
     .status-active { background: #ccffcc; border-color: #009900; color: #006600; }
     .status-completed { background: #ccccff; border-color: #000080; color: #000080; }
     .status-pending { background: #ffffcc; border-color: #999900; color: #666600; }
@@ -102,6 +102,9 @@ $exptRows = pdo($pdo,
     .subtables-row { display: flex; background: #c0c0c0; }
     .subtable-col { flex: 1; border-right: 2px solid #808080; display: flex; flex-direction: column; }
     .subtable-col:last-child { border-right: none; }
+    .subtable-col:first-child { flex: 0 0 22%; }   /* Members — narrower */
+    .subtable-col:nth-child(2) { flex: 1; }         /* Tasks — fills remaining */
+    .subtable-col:last-child  { flex: 0 0 30%; }   /* Experiments */
     .subtable-header { background: #404080; color: #fff; padding: 3px 8px; font-weight: bold; font-size: 11px; border-bottom: 1px solid #222260; }
     .subtable-body { overflow-y: auto; max-height: 220px; }
     .subtable-body table { width: 100%; border-collapse: collapse; font-size: 12px; }
@@ -115,7 +118,7 @@ $exptRows = pdo($pdo,
 
     /* Progress bar — white left, blue right */
     .progress-bar-outer { background: #fff; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; height: 12px; width: 80px; display: inline-block; vertical-align: middle; }
-    .progress-bar-inner { background: linear-gradient(90deg, #fff 0%, #1084d0 60%, #000080 100%); height: 100%; }
+    .progress-bar-inner { background: linear-gradient(90deg, #0D74C6, #06329E); height: 100%; }
   </style>
 </head>
 <body>

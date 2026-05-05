@@ -78,7 +78,7 @@ function sc(string $status): string {
     .data-table a { color: #000080; text-decoration: underline; cursor: pointer; }
     .data-table a:hover { color: #ff0000; }
     .progress-bar-outer { width: 80px; height: 12px; background: #fff; border-top: 1px solid #808080; border-left: 1px solid #808080; border-right: 1px solid #fff; border-bottom: 1px solid #fff; display: inline-block; vertical-align: middle; }
-    .progress-bar-inner { height: 100%; background: #000080; }
+    .progress-bar-inner { height: 100%; background: linear-gradient(90deg, #0D74C6, #06329E); }
     .result-section { border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; margin-bottom: 12px; }
     .section-hdr { background: linear-gradient(90deg, #000080, #1084d0); color: #fff; padding: 4px 10px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; user-select: none; font-weight: bold; font-size: 12px; }
     .section-hdr:hover { background: linear-gradient(90deg, #0000a0, #2094e0); }
