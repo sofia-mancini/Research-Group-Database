@@ -188,22 +188,6 @@ INSERT INTO `literature` VALUES (1,'A programmable dual-RNA-guided DNA endonucle
 UNLOCK TABLES;
 
 --
--- Temporary view structure for view `member_contact_view`
---
-
-DROP TABLE IF EXISTS `member_contact_view`;
-/*!50001 DROP VIEW IF EXISTS `member_contact_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `member_contact_view` AS SELECT 
- 1 AS `person_id`,
- 1 AS `name`,
- 1 AS `email`,
- 1 AS `role`,
- 1 AS `group_name`*/;
-SET character_set_client = @saved_cs_client;
-
---
 -- Table structure for table `Person`
 --
 
@@ -321,32 +305,6 @@ LOCK TABLES `project` WRITE;
 INSERT INTO `project` VALUES (1,'CRISPR Gene Editing Study','Investigating CRISPR-Cas9 efficacy in human cell lines','2023-01-15','2024-12-31','Active'),(2,'Quantum Error Correction','Developing algorithms to minimize quantum decoherence','2022-06-01','2025-05-31','Active'),(3,'AI Tumor Detection','CNN-based model for early-stage tumor detection in MRI scans','2023-03-01','2024-09-30','Completed'),(4,'Arctic Ice Melt Simulation','Modeling ice sheet dynamics under climate change scenarios','2021-09-01','2023-08-31','Completed'),(6,'Biodegradable Scaffold Design','Creating scaffolds for bone tissue engineering','2022-11-01','2024-10-31','Active'),(7,'Social Media Sentiment Mining','Large-scale NLP analysis of public opinion trends','2023-05-15','2024-05-14','Completed'),(8,'Terahertz Imaging System','Building a sub-millimeter wave imaging device','2024-01-01','2026-01-01','Active'),(9,'Amyloid Fibril Structure','Cryo-EM study of amyloid aggregation pathways','2023-02-01','2025-01-31','Active'),(10,'Drug-Receptor Binding Simulation','MD simulations for novel kinase inhibitors','2022-04-01','2024-03-31','Completed'),(11,'CAR-T Cell Optimization','Engineering chimeric antigen receptors for improved tumor targeting','2023-04-01','2025-03-31','Active'),(12,'COVID-19 Variant Surveillance','Genomic epidemiology of emerging SARS-CoV-2 variants','2022-01-01','2023-12-31','Completed'),(13,'Graphene Transistor Fabrication','Developing sub-10nm graphene field-effect transistors','2025-06-01',NULL,'Active'),(14,'Exoplanet Atmosphere Analysis','Spectroscopic characterization of habitable zone exoplanet atmospheres','2022-08-01','2024-07-31','On Hold'),(15,'Working Memory and Aging','fMRI study of prefrontal cortex activity in aging populations','2023-09-01','2025-08-31','Active'),(16,'Deep Sea Carbon Flux Study','Measuring biological pump efficiency in abyssal zones','2021-05-01','2023-04-30','Completed'),(17,'Laparoscopic Robot Arm v2','Second-generation autonomous laparoscopic surgical robot','2023-10-01','2026-09-30','Active'),(18,'Human Migration Genomics','SNP-based analysis of ancient human migration patterns','2022-03-01','2024-02-28','Completed'),(19,'Urban Air Quality Monitoring','Dense sensor network for real-time urban pollutant mapping','2023-07-01','2025-06-30','Active'),(20,'Hydrogel Viscoelasticity Study','Rheological characterization of polyacrylamide hydrogels','2022-10-01','2026-09-30','On Hold'),(21,'MRSA Resistance Mechanism Mapping','WGS-based identification of antibiotic resistance genes in MRSA','2023-01-01','2029-04-30','Active'),(22,'Hippocampal Place Cell Simulation','Computational model of spatial navigation in CA1 neurons','2022-07-01','2025-06-30','Active'),(23,'Droplet Microfluidics for Blood Typing','Encapsulation-based rapid blood group determination platform','2023-05-01','2025-04-30','Active'),(24,'Migratory Bird Tracking Study','GPS telemetry and foraging behavior of Arctic tern populations','2021-06-01','2023-05-31','Completed'),(25,'Rare Earth Isotope Profiling','Lanthanide isotope ratios as tracers in sedimentary basins','2022-09-01','2024-08-31','Completed'),(26,'Bilingual Brain Mapping','fMRI and EEG analysis of language switching in bilinguals','2023-11-01',NULL,'Active'),(27,'Perovskite Solar Cell Stability','Investigating moisture and thermal degradation in perovskite PVs','2023-02-01','2025-01-31','Active'),(28,'Pancreatic Cancer Biomarker Discovery','Proteomics-based early detection markers for pancreatic ductal carcinoma','2022-05-01','2024-04-30','Active'),(29,'Flu Mobility Surveillance','Correlating population mobility data with influenza outbreak dynamics','2023-03-01','2024-02-29','Completed'),(30,'Terpenoid Biosynthesis Engineering','Designing yeast strains for high-yield terpenoid production','2023-08-01',NULL,'Active'),(31,'General Relativistic Magnetohydrodynamics','Project will consist of creating simulation files, generating images, analyzing beta modes, and discussing results.','2023-10-12','2027-06-30','Active');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `project_access_view`
---
-
-DROP TABLE IF EXISTS `project_access_view`;
-/*!50001 DROP VIEW IF EXISTS `project_access_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `project_access_view` AS
-SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
-       proj.project_id, proj.title, proj.description, proj.status,
-       proj.start_date, proj.end_date
-FROM Person p
-JOIN project_member pm ON p.ID = pm.person_id
-JOIN project proj ON proj.project_id = pm.project_id
-
-UNION
-
-SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
-       proj.project_id, proj.title, proj.description, proj.status,
-       proj.start_date, proj.end_date
-FROM Person p
-JOIN project_member pm ON p.ID = pm.person_id
-JOIN project proj ON pm.role = 'Project Lead'*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `project_expt`
@@ -563,6 +521,48 @@ CREATE TABLE `task_assignment` (
   CONSTRAINT `task_assignment_ibfk_2` FOREIGN KEY (`task_id`) REFERENCES `task` (`task_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Temporary view structure for view `member_contact_view`
+--
+
+DROP TABLE IF EXISTS `member_contact_view`;
+/*!50001 DROP VIEW IF EXISTS `member_contact_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `member_contact_view` AS SELECT
+ 1 AS `person_id`,
+ 1 AS `name`,
+ 1 AS `email`,
+ 1 AS `role`,
+ 1 AS `group_name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `project_access_view`
+--
+
+DROP TABLE IF EXISTS `project_access_view`;
+/*!50001 DROP VIEW IF EXISTS `project_access_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `project_access_view` AS
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON proj.project_id = pm.project_id
+
+UNION
+
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON pm.role = 'Project Lead'*/;
+SET character_set_client = @saved_cs_client;
 
 --
 -- Dumping data for table `task_assignment`
