@@ -169,6 +169,12 @@ $projectRows = pdo($pdo,
 
         <div class="details-section">
           <table class="details-table">
+            <?php if (!empty($lit['authors'])): ?>
+            <tr>
+              <td class="label">Authors:</td>
+              <td colspan="5"><?php echo htmlspecialchars($lit['authors']); ?></td>
+            </tr>
+            <?php endif; ?>
             <tr>
               <td class="label">Year:</td>
               <td><?php echo htmlspecialchars($lit['year'] ?? '—'); ?></td>
