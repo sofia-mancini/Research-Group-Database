@@ -13,9 +13,9 @@ if ($searched && $q !== '') {
     $term = '%' . $q . '%';
     $projects    = pdo($pdo, "SELECT * FROM project    WHERE title LIKE :t1 OR description LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
     $tasks       = pdo($pdo, "SELECT * FROM task       WHERE title LIKE :t1 OR description LIKE :t2", ['t1' => $term, 't2' => $term])->fetchAll();
-    $members     = pdo($pdo, "SELECT DISTINCT p.* FROM Person p LEFT JOIN person_group pg ON p.ID = pg.person_id WHERE p.name LIKE :t1 OR p.email LIKE :t2 OR pg.role LIKE :t3", ['t1' => $term, 't2' => $term, 't3' => $term])->fetchAll();
+    $members     = pdo($pdo, "SELECT DISTINCT p.ID, p.name, p.email, p.role AS sys_role, pg.role AS group_role FROM Person p LEFT JOIN person_group pg ON p.ID = pg.person_id WHERE p.name LIKE :t1 OR p.email LIKE :t2 OR pg.role LIKE :t3", ['t1' => $term, 't2' => $term, 't3' => $term])->fetchAll();
     $experiments = pdo($pdo, "SELECT * FROM experiment WHERE title LIKE :t1 OR objective LIKE :t2 OR description LIKE :t3", ['t1' => $term, 't2' => $term, 't3' => $term])->fetchAll();
-    $literature  = pdo($pdo, "SELECT * FROM literature WHERE title LIKE :t1 OR authors LIKE :t2 OR journal LIKE :t3 OR year LIKE :t4", ['t1' => $term, 't2' => $term, 't3' => $term, 't4' => $term])->fetchAll();
+    $literature  = pdo($pdo, "SELECT * FROM literature WHERE title LIKE :t1 OR journal LIKE :t2 OR CAST(year AS CHAR) LIKE :t3", ['t1' => $term, 't2' => $term, 't3' => $term])->fetchAll();
 }
 
 $urlQ       = ($searched && $q !== '') ? '?q=' . urlencode($q) : '';
@@ -251,7 +251,7 @@ function sc(string $status): string {
                 <tr>
                   <td><a href="member_view.php?id=<?php echo $m['ID']; ?>"><?php echo htmlspecialchars($m['name']); ?></a></td>
                   <td><?php echo htmlspecialchars($m['email'] ?? '—'); ?></td>
-                  <td><?php echo htmlspecialchars($m['role'] ?? '—'); ?></td>
+                  <td><?php echo htmlspecialchars($m['group_role'] ?? $m['sys_role'] ?? '—'); ?></td>
                 </tr>
                 <?php endforeach; ?>
               </tbody>
