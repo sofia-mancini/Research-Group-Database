@@ -174,6 +174,9 @@ CREATE TABLE `literature` (
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_literature_year ON literature(year);
+CREATE INDEX idx_literature_journal ON literature(journal);
+
 --
 -- Dumping data for table `literature`
 --
@@ -307,6 +310,8 @@ CREATE TABLE `project` (
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_project_status ON project(status);
+
 --
 -- Dumping data for table `project`
 --
@@ -325,16 +330,22 @@ DROP TABLE IF EXISTS `project_access_view`;
 /*!50001 DROP VIEW IF EXISTS `project_access_view`*/;
 SET @saved_cs_client     = @@character_set_client;
 /*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `project_access_view` AS SELECT 
- 1 AS `person_id`,
- 1 AS `name`,
- 1 AS `project_role`,
- 1 AS `project_id`,
- 1 AS `title`,
- 1 AS `description`,
- 1 AS `status`,
- 1 AS `start_date`,
- 1 AS `end_date`*/;
+/*!50001 CREATE VIEW `project_access_view` AS
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON proj.project_id = pm.project_id
+
+UNION
+
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON pm.role = 'Project Lead'*/;
 SET character_set_client = @saved_cs_client;
 
 --
@@ -521,6 +532,10 @@ CREATE TABLE `task` (
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_task_status ON task(status);
+CREATE INDEX idx_task_due_date ON task(due_date);
+CREATE INDEX idx_task_progress ON task(progress);
+
 --
 -- Dumping data for table `task`
 --
@@ -590,7 +605,22 @@ UNLOCK TABLES;
 /*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
 
-/*!50001 VIEW `project_access_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`pm`.`role` AS `project_role`,`proj`.`project_id` AS `project_id`,`proj`.`title` AS `title`,`proj`.`description` AS `description`,`proj`.`status` AS `status`,`proj`.`start_date` AS `start_date`,`proj`.`end_date` AS `end_date` from ((`Person` `p` join `project_member` `pm` on((`p`.`ID` = `pm`.`person_id`))) join `project` `proj` on(((`pm`.`role` = 'Project Lead') or (`proj`.`project_id` = `pm`.`project_id`)))) */;
+/*!50001 VIEW `project_access_view` AS
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON proj.project_id = pm.project_id
+
+UNION
+
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON pm.role = 'Project Lead' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
