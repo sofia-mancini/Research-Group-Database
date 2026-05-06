@@ -2,6 +2,7 @@
 require_once "includes/session.php";
 require_once "includes/database-connection.php";
 require_once "includes/auth.php";
+
 require_login($logged_in);
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
@@ -12,7 +13,7 @@ if (!$task) { header('Location: tasks.php'); exit; }
 
 $assignedPeople = pdo($pdo,
     "SELECT p.ID, p.name, p.email, p.role, ta.assigned_date
-     FROM person p
+     FROM Person p
      JOIN task_assignment ta ON p.ID = ta.person_id
      WHERE ta.task_id = :id
      ORDER BY p.name",
@@ -61,7 +62,7 @@ $project = pdo($pdo,
     .quick-link-btn:active { border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; }
     .divider { border: none; border-top: 1px solid #808080; border-bottom: 1px solid #fff; margin: 10px 0; }
     .toolbar-action { padding: 3px 10px; background: #c0c0c0; border-top: 2px solid #fff; border-left: 2px solid #fff; border-right: 2px solid #808080; border-bottom: 2px solid #808080; font-family: inherit; font-size: 11px; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; text-decoration: none; color: #000; margin-bottom: 10px; }
-    .status-badge { padding: 1px 6px; font-size: 10px; border: 1px solid; }
+    .status-badge { padding: 1px 6px; font-size: 10px; border: 1px solid; white-space: nowrap; }
     .status-active { background: #ccffcc; border-color: #009900; color: #006600; }
     .status-completed { background: #ccccff; border-color: #000080; color: #000080; }
     .status-pending { background: #ffffcc; border-color: #999900; color: #666600; }
@@ -78,12 +79,18 @@ $project = pdo($pdo,
     .start-logo span:nth-child(4) { background: #ffaa00; }
     .taskbar-active { background: #c0c0c0; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; padding: 2px 10px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
     .taskbar-clock { margin-left: auto; padding: 2px 8px; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; font-size: 11px; min-width: 60px; text-align: center; }
+
+    /* Main panel */
     .main-panel { border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; margin-bottom: 12px; }
     .main-panel-header { background: linear-gradient(90deg, #000080, #1084d0); color: #fff; padding: 4px 10px; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 6px; }
+
+    /* Details section */
     .details-section { background: #c0c0c0; padding: 10px 12px; border-bottom: 2px solid #808080; }
     .details-table { border-collapse: collapse; width: 100%; }
     .details-table td { padding: 4px 10px; vertical-align: top; font-size: 12px; }
-    .details-table td.label { font-weight: bold; color: #000080; white-space: nowrap; width: 110px; }
+    .details-table td.label { font-weight: bold; color: #000080; white-space: nowrap; width: 90px; }
+
+    /* Two-column subtables */
     .subtables-row { display: flex; background: #c0c0c0; }
     .subtable-col { flex: 1; border-right: 2px solid #808080; display: flex; flex-direction: column; }
     .subtable-col:last-child { border-right: none; }
@@ -97,13 +104,10 @@ $project = pdo($pdo,
     .subtable-body a { color: #000080; text-decoration: underline; }
     .subtable-body a:hover { color: #ff0000; }
     .empty-notice { color: #555; font-style: italic; padding: 8px 6px; font-size: 11px; }
+
+    /* Progress bar */
     .progress-bar-outer { background: #fff; border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; height: 12px; width: 80px; display: inline-block; vertical-align: middle; }
-    .progress-bar-inner { background: linear-gradient(90deg, #fff 0%, #1084d0 60%, #000080 100%); height: 100%; }
-    /* Single-column project panel */
-    .project-panel { background: #c0c0c0; padding: 10px 12px; }
-    .project-card { border-top: 2px solid #808080; border-left: 2px solid #808080; border-right: 2px solid #fff; border-bottom: 2px solid #fff; padding: 8px 12px; background: #d4d4d4; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .project-card a { color: #000080; text-decoration: underline; font-size: 12px; font-weight: bold; }
-    .project-card a:hover { color: #ff0000; }
+    .progress-bar-inner { background: linear-gradient(90deg, #0D74C6, #06329E); height: 100%; }
   </style>
 </head>
 <body>
@@ -159,7 +163,7 @@ $project = pdo($pdo,
 
       <div style="display:flex;gap:8px;margin-bottom:12px;">
         <a class="toolbar-action" href="tasks.php">◀ Back to Tasks</a>
-        <?php if (can_edit_task($_SESSION['role'], $_SESSION['personID'], $id, $pdo)): ?>
+        <?php if (can_edit_task($_SESSION['role'], $_SESSION['person_id'], $id, $pdo)): ?>
           <a class="toolbar-action" href="task_edit.php?id=<?php echo $id; ?>">✏️ Edit Task</a>
         <?php endif; ?>
         <?php if (can_delete($_SESSION['role'])): ?>
@@ -177,8 +181,7 @@ $project = pdo($pdo,
               'completed'   => 'status-completed',
               'in progress' => 'status-active',
               'not started' => 'status-pending',
-              'cancelled'   => 'status-cancelled',
-              default       => ''
+              default       => 'status-cancelled'
             };
             $prog = (int)($task['progress'] ?? 0);
           ?>
@@ -194,9 +197,7 @@ $project = pdo($pdo,
             <tr>
               <td class="label">Progress:</td>
               <td colspan="5">
-                <div class="progress-bar-outer" style="width:120px;">
-                  <div class="progress-bar-inner" style="width:<?php echo $prog; ?>%"></div>
-                </div>
+                <div class="progress-bar-outer"><div class="progress-bar-inner" style="width:<?php echo $prog; ?>%"></div></div>
                 <span style="margin-left:5px;font-size:11px;"><?php echo $prog; ?>%</span>
               </td>
             </tr>
@@ -209,50 +210,23 @@ $project = pdo($pdo,
           </table>
         </div>
 
-        <!-- Project strip (single record) -->
-        <?php if ($project): ?>
-        <div class="subtable-header" style="background:#404080;color:#fff;padding:3px 8px;font-weight:bold;font-size:11px;border-bottom:1px solid #222260;">
-          📁 Parent Project
-        </div>
-        <div class="project-panel">
-          <div class="project-card">
-            <?php
-              $ppsc = match(strtolower($project['status'])) {
-                'active'    => 'status-active',
-                'completed' => 'status-completed',
-                'pending'   => 'status-pending',
-                'cancelled' => 'status-cancelled',
-                default     => ''
-              };
-            ?>
-            <a href="project_view.php?id=<?php echo $project['project_id']; ?>">📁 <?php echo htmlspecialchars($project['title']); ?></a>
-            <span class="status-badge <?php echo $ppsc; ?>"><?php echo htmlspecialchars($project['status']); ?></span>
-          </div>
-        </div>
-        <?php endif; ?>
+        <div class="subtables-row">
 
-        <!-- Assigned People -->
-        <div class="subtables-row" style="border-top:2px solid #808080;">
-          <div class="subtable-col" style="border-right:none;">
-            <div class="subtable-header">👥 Assigned People</div>
+          <!-- Assigned People -->
+          <div class="subtable-col">
+            <div class="subtable-header">👤 Assigned People</div>
             <div class="subtable-body">
               <?php if (empty($assignedPeople)): ?>
-                <p class="empty-notice">No people assigned.</p>
+                <p class="empty-notice">No one assigned.</p>
               <?php else: ?>
               <table>
-                <thead><tr><th>Name</th><th>Role</th><th>Assigned Date</th></tr></thead>
+                <thead><tr><th>Name</th><th>Role</th><th>Assigned</th></tr></thead>
                 <tbody>
-                  <?php foreach ($assignedPeople as $p): ?>
+                  <?php foreach ($assignedPeople as $person): ?>
                   <tr>
-                    <td>
-                      <?php if (can_edit_person($_SESSION['role'])): ?>
-                        <a href="member_edit.php?id=<?php echo $p['ID']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
-                      <?php else: ?>
-                        <a href="member_view.php?id=<?php echo $p['ID']; ?>"><?php echo htmlspecialchars($p['name']); ?></a>
-                      <?php endif; ?>
-                    </td>
-                    <td><?php echo htmlspecialchars($p['role']); ?></td>
-                    <td><?php echo htmlspecialchars($p['assigned_date'] ?? '—'); ?></td>
+                    <td><a href="member_view.php?id=<?php echo $person['ID']; ?>"><?php echo htmlspecialchars($person['name']); ?></a></td>
+                    <td><?php echo htmlspecialchars($person['role']); ?></td>
+                    <td><?php echo htmlspecialchars($person['assigned_date'] ?? '—'); ?></td>
                   </tr>
                   <?php endforeach; ?>
                 </tbody>
@@ -260,8 +234,36 @@ $project = pdo($pdo,
               <?php endif; ?>
             </div>
           </div>
-        </div><!-- /subtables-row -->
 
+          <!-- Parent Project -->
+          <div class="subtable-col">
+            <div class="subtable-header">📁 Parent Project</div>
+            <div class="subtable-body">
+              <?php if (!$project): ?>
+                <p class="empty-notice">No parent project.</p>
+              <?php else:
+                $psc = match(strtolower($project['status'])) {
+                  'active'    => 'status-active',
+                  'completed' => 'status-completed',
+                  'pending'   => 'status-pending',
+                  'cancelled' => 'status-cancelled',
+                  default     => ''
+                };
+              ?>
+              <table>
+                <thead><tr><th>Title</th><th>Status</th></tr></thead>
+                <tbody>
+                  <tr>
+                    <td><a href="project_view.php?id=<?php echo $project['project_id']; ?>"><?php echo htmlspecialchars($project['title']); ?></a></td>
+                    <td><span class="status-badge <?php echo $psc; ?>"><?php echo htmlspecialchars($project['status']); ?></span></td>
+                  </tr>
+                </tbody>
+              </table>
+              <?php endif; ?>
+            </div>
+          </div>
+
+        </div><!-- /subtables-row -->
       </div><!-- /main-panel -->
 
     </div><!-- /ie-content -->

@@ -1,11 +1,11 @@
 <?php                                             // Opening PHP tag
 $type     = 'mysql';                             // Type of database
-$server   = 'host.docker.internal';             // Server (Docker to local MySQL)
-$db       = 'research_group_db';               // Name of the database
+$server   = 'localhost';                        // Server (cPanel/HostGator)
+$db       = 'keelyfow_research_group_db';      // Name of the database
 $port     = '3306';                           // Port is usually 3306
 $charset  = 'utf8mb4';                       // UTF-8 encoding using 4 bytes of data per char
-$username = 'root';                         // MySQL username
-$password = '';                            // No password set
+$username = 'keelyfow_keelyfowler';         // MySQL username
+$password = 'csc4362026!';                 // MySQL password
 // Variables above will need to be adjusted to work with cpanel/MAMP/etc
 
 // DO *NOT* CHANGE ANYTHING BENEATH THIS LINE

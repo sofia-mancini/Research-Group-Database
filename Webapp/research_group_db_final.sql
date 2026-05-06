@@ -14,14 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
-
---
--- GTID state at the beginning of the backup 
---
-
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'f22bcb86-0826-11f1-bac1-7c9a91097841:1-193';
 
 --
 -- Table structure for table `department`
@@ -60,7 +52,7 @@ CREATE TABLE `department_test` (
   `name` varchar(100) NOT NULL,
   `abbreviation` varchar(20) NOT NULL,
   PRIMARY KEY (`department_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -169,6 +161,7 @@ DROP TABLE IF EXISTS `literature`;
 CREATE TABLE `literature` (
   `lit_id` int NOT NULL AUTO_INCREMENT,
   `title` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci NOT NULL,
+  `authors` varchar(500) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `year` year NOT NULL,
   `journal` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
   `doi` varchar(255) CHARACTER SET utf8mb3 COLLATE utf8mb3_unicode_ci DEFAULT NULL,
@@ -182,31 +175,18 @@ CREATE TABLE `literature` (
 ) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_literature_year ON literature(year);
+CREATE INDEX idx_literature_journal ON literature(journal);
+
 --
 -- Dumping data for table `literature`
 --
 
 LOCK TABLES `literature` WRITE;
 /*!40000 ALTER TABLE `literature` DISABLE KEYS */;
-INSERT INTO `literature` VALUES (1,'A programmable dual-RNA-guided DNA endonuclease in adaptive bacterial immunity',2012,'Science','10.1126/science.1225829','https://doi.org/10.1126/science.1225829','Describes the mechanism of CRISPR-Cas9 as a programmable genome editing tool'),(2,'Quantum supremacy using a programmable superconducting processor',2019,'Nature','10.1038/s41586-019-1666-5','https://doi.org/10.1038/s41586-019-1666-5','Demonstrates quantum computational advantage over classical supercomputers'),(3,'Deep learning for cancer diagnosis: A systematic review',2017,'Annual Review of Biomedical Engineering','10.1146/annurev-bioeng-071516-044442','https://doi.org/10.1146/annurev-bioeng-071516-044442','Reviews deep learning applications in medical image analysis'),(4,'Global warming and the future of the Arctic',2016,'Nature Climate Change','10.1038/nclimate2924','https://doi.org/10.1038/nclimate2924','Predicts irreversible ice loss under continued greenhouse gas emissions'),(5,'Long-term potentiation – a decade of progress',1999,'Science','10.1126/science.285.5435.1870','https://doi.org/10.1126/science.285.5435.1870','Reviews cellular and molecular mechanisms underlying synaptic plasticity'),(6,'Biomaterials for bone tissue engineering: A review',2006,'Biomaterials','10.1016/j.biomaterials.2006.01.039','https://doi.org/10.1016/j.biomaterials.2006.01.039','Surveys bioactive and biodegradable materials for bone scaffolds'),(7,'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding',2019,'NAACL-HLT','10.18653/v1/N19-1423','https://doi.org/10.18653/v1/N19-1423','Introduces BERT, a transformer-based model for NLP tasks'),(8,'Terahertz technology and its applications',2002,'IEEE Transactions on Microwave Theory and Techniques','10.1109/TMTT.2002.808283','https://doi.org/10.1109/TMTT.2002.808283','Reviews THz sources, detectors and imaging applications'),(9,'Cryo-EM structure of amyloid fibrils from Alzheimer disease brain',2017,'Nature','10.1038/nature23002','https://doi.org/10.1038/nature23002','High-resolution structural characterization of disease-relevant amyloid polymorphs'),(10,'Free Energy Calculations in Structure-Based Drug Design',2017,'Journal of Chemical Information and Modeling','10.1021/acs.jcim.7b00169','https://doi.org/10.1021/acs.jcim.7b00169','Reviews alchemical free energy methods and applications in drug discovery'),(11,'Chimeric antigen receptor T cells for sustained remissions in leukemia',2014,'New England Journal of Medicine','10.1056/NEJMoa1407222','https://doi.org/10.1056/NEJMoa1407222','Clinical evidence for durable remission using CD19-targeting CAR-T therapy'),(12,'SARS-CoV-2 variants of concern and vaccine effectiveness',2021,'New England Journal of Medicine','10.1056/NEJMoa2108891','https://doi.org/10.1056/NEJMoa2108891','Real-world vaccine effectiveness data against Alpha and Delta variants'),(13,'Electric field effect in atomically thin carbon films',2004,'Science','10.1126/science.1102896','https://doi.org/10.1126/science.1102896','Discovery of graphene and demonstration of the electric field effect'),(14,'Atmospheric characterization of the hot Jupiter WASP-39b',2023,'Nature','10.1038/s41586-022-05650-9','https://doi.org/10.1038/s41586-022-05650-9','First detection of CO2 and other molecules in exoplanet atmosphere by JWST'),(15,'Age-related changes in prefrontal cortex activity during working memory',2008,'Current Directions in Psychological Science','10.1111/j.1467-8721.2008.00567.x','https://doi.org/10.1111/j.1467-8721.2008.00567.x','HAROLD model of hemispheric asymmetry reduction in older adults during cognitive tasks'),(16,'The biological pump in a high CO2 world',2009,'Marine Ecology Progress Series','10.3354/meps07582','https://doi.org/10.3354/meps07582','Reviews impacts of ocean acidification on particulate organic carbon export'),(17,'Robot-assisted minimally invasive surgery: a review',2004,'Annals of Surgery','10.1097/01.sla.0000103020.19595.7d','https://doi.org/10.1097/01.sla.0000103020.19595.7d','Overview of surgical robot systems and clinical outcomes'),(18,'The genomic history of ancient Europe',2015,'Nature','10.1038/nature14317','https://doi.org/10.1038/nature14317','Massive ancient DNA study revealing steppe migration into Neolithic Europe'),(19,'Urban air pollution and health: A review of epidemiological evidence',2002,'Lancet','10.1016/S0140-6736(02)11274-8','https://doi.org/10.1016/S0140-6736(02)11274-8','Epidemiological evidence linking urban air pollutants to respiratory and cardiovascular disease'),(20,'Mechanical properties of hydrogels and their experimental determination',1996,'Biomaterials','10.1016/0142-9612(96)87284-9','https://doi.org/10.1016/0142-9612(96)87284-9','Reviews theory and measurement of elastic and viscoelastic properties of hydrogels'),(21,'Molecular epidemiology of methicillin-resistant Staphylococcus aureus',1999,'Infection, Genetics and Evolution','10.1016/j.meegid.2007.07.007','https://doi.org/10.1016/j.meegid.2007.07.007','Global MRSA clonal lineages and resistance gene acquisition mechanisms'),(22,'Theta sequences are essential for internally generated hippocampal firing fields',2020,'Nature Neuroscience','10.1038/s41593-019-0559-0','https://doi.org/10.1038/s41593-019-0559-0','Demonstrates theta phase precession as a mechanism for sequential memory retrieval'),(23,'Droplet microfluidics: a tool for biology, chemistry and nanotechnology',2012,'Lab on a Chip','10.1039/c2lc21147e','https://doi.org/10.1039/c2lc21147e','Review of droplet generation, manipulation and applications in high-throughput screening'),(24,'Long-distance migration of birds and its ecological significance',2011,'Science','10.1126/science.1194106','https://doi.org/10.1126/science.1194106','Review of energetics, navigation and ecological drivers of long-distance avian migration'),(25,'Rare earth element geochemistry',1985,'Geochimica et Cosmochimica Acta','10.1016/0016-7037(85)90170-3','https://doi.org/10.1016/0016-7037(85)90170-3','Foundational reference for REE distribution patterns in crustal and mantle rocks'),(26,'The bilingual brain: Flexibility and control in the human language system',2016,'Psychological Science in the Public Interest','10.1177/1529100616675605','https://doi.org/10.1177/1529100616675605','Neural basis of bilingual language control and the adaptive control hypothesis'),(27,'Highly efficient perovskite solar cells via improved carrier management',2022,'Science','10.1126/science.abm953','https://doi.org/10.1126/science.abm953','Interface engineering strategy achieving >25% PCE in perovskite solar cells'),(28,'Proteomics-based identification of pancreatic cancer biomarkers',2009,'Journal of Proteome Research','10.1021/pr900008q','https://doi.org/10.1021/pr900008q','Discovery of novel plasma protein biomarkers for early pancreatic cancer detection'),(29,'Human mobility and the worldwide spread of infectious diseases',2013,'Science','10.1126/science.1245200','https://doi.org/10.1126/science.1245200','Effective distance model linking air traffic mobility to epidemic arrival times'),(30,'Engineering the third generation of synthetic biology',2010,'Nature Reviews Genetics','10.1038/nrg2775','https://doi.org/10.1038/nrg2775','Review of genetic circuit design principles and applications in metabolic engineering');
+INSERT INTO `literature` (`lit_id`, `title`, `year`, `journal`, `doi`, `url`, `theory`) VALUES (1,'A programmable dual-RNA-guided DNA endonuclease in adaptive bacterial immunity',2012,'Science','10.1126/science.1225829','https://doi.org/10.1126/science.1225829','Describes the mechanism of CRISPR-Cas9 as a programmable genome editing tool'),(2,'Quantum supremacy using a programmable superconducting processor',2019,'Nature','10.1038/s41586-019-1666-5','https://doi.org/10.1038/s41586-019-1666-5','Demonstrates quantum computational advantage over classical supercomputers'),(3,'Deep learning for cancer diagnosis: A systematic review',2017,'Annual Review of Biomedical Engineering','10.1146/annurev-bioeng-071516-044442','https://doi.org/10.1146/annurev-bioeng-071516-044442','Reviews deep learning applications in medical image analysis'),(4,'Global warming and the future of the Arctic',2016,'Nature Climate Change','10.1038/nclimate2924','https://doi.org/10.1038/nclimate2924','Predicts irreversible ice loss under continued greenhouse gas emissions'),(5,'Long-term potentiation – a decade of progress',1999,'Science','10.1126/science.285.5435.1870','https://doi.org/10.1126/science.285.5435.1870','Reviews cellular and molecular mechanisms underlying synaptic plasticity'),(6,'Biomaterials for bone tissue engineering: A review',2006,'Biomaterials','10.1016/j.biomaterials.2006.01.039','https://doi.org/10.1016/j.biomaterials.2006.01.039','Surveys bioactive and biodegradable materials for bone scaffolds'),(7,'BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding',2019,'NAACL-HLT','10.18653/v1/N19-1423','https://doi.org/10.18653/v1/N19-1423','Introduces BERT, a transformer-based model for NLP tasks'),(8,'Terahertz technology and its applications',2002,'IEEE Transactions on Microwave Theory and Techniques','10.1109/TMTT.2002.808283','https://doi.org/10.1109/TMTT.2002.808283','Reviews THz sources, detectors and imaging applications'),(9,'Cryo-EM structure of amyloid fibrils from Alzheimer disease brain',2017,'Nature','10.1038/nature23002','https://doi.org/10.1038/nature23002','High-resolution structural characterization of disease-relevant amyloid polymorphs'),(10,'Free Energy Calculations in Structure-Based Drug Design',2017,'Journal of Chemical Information and Modeling','10.1021/acs.jcim.7b00169','https://doi.org/10.1021/acs.jcim.7b00169','Reviews alchemical free energy methods and applications in drug discovery'),(11,'Chimeric antigen receptor T cells for sustained remissions in leukemia',2014,'New England Journal of Medicine','10.1056/NEJMoa1407222','https://doi.org/10.1056/NEJMoa1407222','Clinical evidence for durable remission using CD19-targeting CAR-T therapy'),(12,'SARS-CoV-2 variants of concern and vaccine effectiveness',2021,'New England Journal of Medicine','10.1056/NEJMoa2108891','https://doi.org/10.1056/NEJMoa2108891','Real-world vaccine effectiveness data against Alpha and Delta variants'),(13,'Electric field effect in atomically thin carbon films',2004,'Science','10.1126/science.1102896','https://doi.org/10.1126/science.1102896','Discovery of graphene and demonstration of the electric field effect'),(14,'Atmospheric characterization of the hot Jupiter WASP-39b',2023,'Nature','10.1038/s41586-022-05650-9','https://doi.org/10.1038/s41586-022-05650-9','First detection of CO2 and other molecules in exoplanet atmosphere by JWST'),(15,'Age-related changes in prefrontal cortex activity during working memory',2008,'Current Directions in Psychological Science','10.1111/j.1467-8721.2008.00567.x','https://doi.org/10.1111/j.1467-8721.2008.00567.x','HAROLD model of hemispheric asymmetry reduction in older adults during cognitive tasks'),(16,'The biological pump in a high CO2 world',2009,'Marine Ecology Progress Series','10.3354/meps07582','https://doi.org/10.3354/meps07582','Reviews impacts of ocean acidification on particulate organic carbon export'),(17,'Robot-assisted minimally invasive surgery: a review',2004,'Annals of Surgery','10.1097/01.sla.0000103020.19595.7d','https://doi.org/10.1097/01.sla.0000103020.19595.7d','Overview of surgical robot systems and clinical outcomes'),(18,'The genomic history of ancient Europe',2015,'Nature','10.1038/nature14317','https://doi.org/10.1038/nature14317','Massive ancient DNA study revealing steppe migration into Neolithic Europe'),(19,'Urban air pollution and health: A review of epidemiological evidence',2002,'Lancet','10.1016/S0140-6736(02)11274-8','https://doi.org/10.1016/S0140-6736(02)11274-8','Epidemiological evidence linking urban air pollutants to respiratory and cardiovascular disease'),(20,'Mechanical properties of hydrogels and their experimental determination',1996,'Biomaterials','10.1016/0142-9612(96)87284-9','https://doi.org/10.1016/0142-9612(96)87284-9','Reviews theory and measurement of elastic and viscoelastic properties of hydrogels'),(21,'Molecular epidemiology of methicillin-resistant Staphylococcus aureus',1999,'Infection, Genetics and Evolution','10.1016/j.meegid.2007.07.007','https://doi.org/10.1016/j.meegid.2007.07.007','Global MRSA clonal lineages and resistance gene acquisition mechanisms'),(22,'Theta sequences are essential for internally generated hippocampal firing fields',2020,'Nature Neuroscience','10.1038/s41593-019-0559-0','https://doi.org/10.1038/s41593-019-0559-0','Demonstrates theta phase precession as a mechanism for sequential memory retrieval'),(23,'Droplet microfluidics: a tool for biology, chemistry and nanotechnology',2012,'Lab on a Chip','10.1039/c2lc21147e','https://doi.org/10.1039/c2lc21147e','Review of droplet generation, manipulation and applications in high-throughput screening'),(24,'Long-distance migration of birds and its ecological significance',2011,'Science','10.1126/science.1194106','https://doi.org/10.1126/science.1194106','Review of energetics, navigation and ecological drivers of long-distance avian migration'),(25,'Rare earth element geochemistry',1985,'Geochimica et Cosmochimica Acta','10.1016/0016-7037(85)90170-3','https://doi.org/10.1016/0016-7037(85)90170-3','Foundational reference for REE distribution patterns in crustal and mantle rocks'),(26,'The bilingual brain: Flexibility and control in the human language system',2016,'Psychological Science in the Public Interest','10.1177/1529100616675605','https://doi.org/10.1177/1529100616675605','Neural basis of bilingual language control and the adaptive control hypothesis'),(27,'Highly efficient perovskite solar cells via improved carrier management',2022,'Science','10.1126/science.abm953','https://doi.org/10.1126/science.abm953','Interface engineering strategy achieving >25% PCE in perovskite solar cells'),(28,'Proteomics-based identification of pancreatic cancer biomarkers',2009,'Journal of Proteome Research','10.1021/pr900008q','https://doi.org/10.1021/pr900008q','Discovery of novel plasma protein biomarkers for early pancreatic cancer detection'),(29,'Human mobility and the worldwide spread of infectious diseases',2013,'Science','10.1126/science.1245200','https://doi.org/10.1126/science.1245200','Effective distance model linking air traffic mobility to epidemic arrival times'),(30,'Engineering the third generation of synthetic biology',2010,'Nature Reviews Genetics','10.1038/nrg2775','https://doi.org/10.1038/nrg2775','Review of genetic circuit design principles and applications in metabolic engineering');
 /*!40000 ALTER TABLE `literature` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `member_contact_view`
---
-
-DROP TABLE IF EXISTS `member_contact_view`;
-/*!50001 DROP VIEW IF EXISTS `member_contact_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `member_contact_view` AS SELECT 
- 1 AS `person_id`,
- 1 AS `name`,
- 1 AS `email`,
- 1 AS `role`,
- 1 AS `group_name`*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `Person`
@@ -315,6 +295,8 @@ CREATE TABLE `project` (
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_project_status ON project(status);
+
 --
 -- Dumping data for table `project`
 --
@@ -324,26 +306,6 @@ LOCK TABLES `project` WRITE;
 INSERT INTO `project` VALUES (1,'CRISPR Gene Editing Study','Investigating CRISPR-Cas9 efficacy in human cell lines','2023-01-15','2024-12-31','Active'),(2,'Quantum Error Correction','Developing algorithms to minimize quantum decoherence','2022-06-01','2025-05-31','Active'),(3,'AI Tumor Detection','CNN-based model for early-stage tumor detection in MRI scans','2023-03-01','2024-09-30','Completed'),(4,'Arctic Ice Melt Simulation','Modeling ice sheet dynamics under climate change scenarios','2021-09-01','2023-08-31','Completed'),(6,'Biodegradable Scaffold Design','Creating scaffolds for bone tissue engineering','2022-11-01','2024-10-31','Active'),(7,'Social Media Sentiment Mining','Large-scale NLP analysis of public opinion trends','2023-05-15','2024-05-14','Completed'),(8,'Terahertz Imaging System','Building a sub-millimeter wave imaging device','2024-01-01','2026-01-01','Active'),(9,'Amyloid Fibril Structure','Cryo-EM study of amyloid aggregation pathways','2023-02-01','2025-01-31','Active'),(10,'Drug-Receptor Binding Simulation','MD simulations for novel kinase inhibitors','2022-04-01','2024-03-31','Completed'),(11,'CAR-T Cell Optimization','Engineering chimeric antigen receptors for improved tumor targeting','2023-04-01','2025-03-31','Active'),(12,'COVID-19 Variant Surveillance','Genomic epidemiology of emerging SARS-CoV-2 variants','2022-01-01','2023-12-31','Completed'),(13,'Graphene Transistor Fabrication','Developing sub-10nm graphene field-effect transistors','2025-06-01',NULL,'Active'),(14,'Exoplanet Atmosphere Analysis','Spectroscopic characterization of habitable zone exoplanet atmospheres','2022-08-01','2024-07-31','On Hold'),(15,'Working Memory and Aging','fMRI study of prefrontal cortex activity in aging populations','2023-09-01','2025-08-31','Active'),(16,'Deep Sea Carbon Flux Study','Measuring biological pump efficiency in abyssal zones','2021-05-01','2023-04-30','Completed'),(17,'Laparoscopic Robot Arm v2','Second-generation autonomous laparoscopic surgical robot','2023-10-01','2026-09-30','Active'),(18,'Human Migration Genomics','SNP-based analysis of ancient human migration patterns','2022-03-01','2024-02-28','Completed'),(19,'Urban Air Quality Monitoring','Dense sensor network for real-time urban pollutant mapping','2023-07-01','2025-06-30','Active'),(20,'Hydrogel Viscoelasticity Study','Rheological characterization of polyacrylamide hydrogels','2022-10-01','2026-09-30','On Hold'),(21,'MRSA Resistance Mechanism Mapping','WGS-based identification of antibiotic resistance genes in MRSA','2023-01-01','2029-04-30','Active'),(22,'Hippocampal Place Cell Simulation','Computational model of spatial navigation in CA1 neurons','2022-07-01','2025-06-30','Active'),(23,'Droplet Microfluidics for Blood Typing','Encapsulation-based rapid blood group determination platform','2023-05-01','2025-04-30','Active'),(24,'Migratory Bird Tracking Study','GPS telemetry and foraging behavior of Arctic tern populations','2021-06-01','2023-05-31','Completed'),(25,'Rare Earth Isotope Profiling','Lanthanide isotope ratios as tracers in sedimentary basins','2022-09-01','2024-08-31','Completed'),(26,'Bilingual Brain Mapping','fMRI and EEG analysis of language switching in bilinguals','2023-11-01',NULL,'Active'),(27,'Perovskite Solar Cell Stability','Investigating moisture and thermal degradation in perovskite PVs','2023-02-01','2025-01-31','Active'),(28,'Pancreatic Cancer Biomarker Discovery','Proteomics-based early detection markers for pancreatic ductal carcinoma','2022-05-01','2024-04-30','Active'),(29,'Flu Mobility Surveillance','Correlating population mobility data with influenza outbreak dynamics','2023-03-01','2024-02-29','Completed'),(30,'Terpenoid Biosynthesis Engineering','Designing yeast strains for high-yield terpenoid production','2023-08-01',NULL,'Active'),(31,'General Relativistic Magnetohydrodynamics','Project will consist of creating simulation files, generating images, analyzing beta modes, and discussing results.','2023-10-12','2027-06-30','Active');
 /*!40000 ALTER TABLE `project` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary view structure for view `project_access_view`
---
-
-DROP TABLE IF EXISTS `project_access_view`;
-/*!50001 DROP VIEW IF EXISTS `project_access_view`*/;
-SET @saved_cs_client     = @@character_set_client;
-/*!50503 SET character_set_client = utf8mb4 */;
-/*!50001 CREATE VIEW `project_access_view` AS SELECT 
- 1 AS `person_id`,
- 1 AS `name`,
- 1 AS `project_role`,
- 1 AS `project_id`,
- 1 AS `title`,
- 1 AS `description`,
- 1 AS `status`,
- 1 AS `start_date`,
- 1 AS `end_date`*/;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `project_expt`
@@ -529,6 +491,10 @@ CREATE TABLE `task` (
 ) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+CREATE INDEX idx_task_status ON task(status);
+CREATE INDEX idx_task_due_date ON task(due_date);
+CREATE INDEX idx_task_progress ON task(progress);
+
 --
 -- Dumping data for table `task`
 --
@@ -558,6 +524,48 @@ CREATE TABLE `task_assignment` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Temporary view structure for view `member_contact_view`
+--
+
+DROP TABLE IF EXISTS `member_contact_view`;
+/*!50001 DROP VIEW IF EXISTS `member_contact_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `member_contact_view` AS SELECT
+ 1 AS `person_id`,
+ 1 AS `name`,
+ 1 AS `email`,
+ 1 AS `role`,
+ 1 AS `group_name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `project_access_view`
+--
+
+DROP TABLE IF EXISTS `project_access_view`;
+/*!50001 DROP VIEW IF EXISTS `project_access_view`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `project_access_view` AS
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON proj.project_id = pm.project_id
+
+UNION
+
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON pm.role = 'Project Lead'*/;
+SET character_set_client = @saved_cs_client;
+
+--
 -- Dumping data for table `task_assignment`
 --
 
@@ -577,10 +585,10 @@ UNLOCK TABLES;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `member_contact_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`p`.`email` AS `email`,`pg`.`role` AS `role`,`rg`.`name` AS `group_name` from ((`person` `p` join `person_group` `pg` on((`p`.`ID` = `pg`.`person_id`))) join `research_group` `rg` on((`pg`.`group_id` = `rg`.`group_id`))) */;
+
+/*!50001 VIEW `member_contact_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`p`.`email` AS `email`,`pg`.`role` AS `role`,`rg`.`name` AS `group_name` from ((`Person` `p` join `person_group` `pg` on((`p`.`ID` = `pg`.`person_id`))) join `research_group` `rg` on((`pg`.`group_id` = `rg`.`group_id`))) */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
@@ -595,14 +603,28 @@ UNLOCK TABLES;
 /*!50001 SET @saved_col_connection     = @@collation_connection */;
 /*!50001 SET character_set_client      = utf8mb4 */;
 /*!50001 SET character_set_results     = utf8mb4 */;
-/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 SET collation_connection      = utf8mb4_unicode_ci */;
 /*!50001 CREATE ALGORITHM=UNDEFINED */
-/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
-/*!50001 VIEW `project_access_view` AS select `p`.`ID` AS `person_id`,`p`.`name` AS `name`,`pm`.`role` AS `project_role`,`proj`.`project_id` AS `project_id`,`proj`.`title` AS `title`,`proj`.`description` AS `description`,`proj`.`status` AS `status`,`proj`.`start_date` AS `start_date`,`proj`.`end_date` AS `end_date` from ((`person` `p` join `project_member` `pm` on((`p`.`ID` = `pm`.`person_id`))) join `project` `proj` on(((`pm`.`role` = 'Project Lead') or (`proj`.`project_id` = `pm`.`project_id`)))) */;
+
+/*!50001 VIEW `project_access_view` AS
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON proj.project_id = pm.project_id
+
+UNION
+
+SELECT p.ID AS person_id, p.name AS name, pm.role AS project_role,
+       proj.project_id, proj.title, proj.description, proj.status,
+       proj.start_date, proj.end_date
+FROM Person p
+JOIN project_member pm ON p.ID = pm.person_id
+JOIN project proj ON pm.role = 'Project Lead' */;
 /*!50001 SET character_set_client      = @saved_cs_client */;
 /*!50001 SET character_set_results     = @saved_cs_results */;
 /*!50001 SET collation_connection      = @saved_col_connection */;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

@@ -13,6 +13,7 @@ $error = null;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title   = trim($_POST['title'] ?? '');
+    $authors = trim($_POST['authors'] ?? '') ?: null;
     $year    = trim($_POST['year'] ?? '');
     $journal = trim($_POST['journal'] ?? '') ?: null;
     $doi     = trim($_POST['doi'] ?? '') ?: null;
@@ -29,10 +30,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = 'URL must start with "http".';
     } else {
         pdo($pdo,
-            "INSERT INTO literature (title, year, journal, doi, url, theory)
-             VALUES (:title, :year, :journal, :doi, :url, :theory)",
+            "INSERT INTO literature (title, authors, year, journal, doi, url, theory)
+             VALUES (:title, :authors, :year, :journal, :doi, :url, :theory)",
             [
                 'title'   => $title,
+                'authors' => $authors,
                 'year'    => $year,
                 'journal' => $journal,
                 'doi'     => $doi,
@@ -137,6 +139,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <div class="form-row">
             <label for="title">Title: *</label>
             <input type="text" id="title" name="title" required value="<?php echo htmlspecialchars($_POST['title'] ?? ''); ?>">
+          </div>
+          <div class="form-row">
+            <label for="authors">Authors:</label>
+            <input type="text" id="authors" name="authors" value="<?php echo htmlspecialchars($_POST['authors'] ?? ''); ?>">
           </div>
           <div class="form-row">
             <label for="year">Year: *</label>

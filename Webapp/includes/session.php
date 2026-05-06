@@ -1,33 +1,40 @@
 <?php
-    session_start();                                        // Start/renew session
-$logged_in = $_SESSION['logged_in'] ?? false;           // Is user logged in?
+// includes/session.php
 
-function login($user)                                   // Remember user passed login
-    {
-session_regenerate_id(true);                        // Update session id
-$_SESSION['logged_in'] = true;                      // Set logged_in key to true
-$_SESSION['username']  = $user['email'];            // Store email as username
-$_SESSION['personID']  = $user['ID'];               // Store Person.ID for permission checks
-$_SESSION['role']      = $user['role'];             // Store role for authorization
-    }
+session_start();
+$logged_in = $_SESSION['logged_in'] ?? false;
 
-function require_login($logged_in)                      // Check if user logged in
-    {
-if ($logged_in == false) {                          // If not logged in
-header('Location: login.php');                  // Send to login page
-exit;                                           // Stop rest of page running
-        }
-    }
+/**
+ * Standardizes session data upon successful authentication.
+ * Uses 'person_id' as the consistent key for database foreign key lookups.
+ */
+function login(array $user): void
+{
+    session_regenerate_id(true); 
+    $_SESSION['logged_in'] = true;
+    $_SESSION['username']  = $user['name'];
+    $_SESSION['role']      = $user['role'];
+    
+    // Fix: Capture the primary key from the 'person' table
+    // Cast to int to satisfy type hinting in auth.php functions
+    $_SESSION['person_id'] = (int)$user['ID']; 
+}
 
-function logout()                                       // Terminate the session
-    {
-$_SESSION = [];                                     // Clear contents of array
-$params = session_get_cookie_params();              // Get session cookie parameters
-// Delete session cookie
-setcookie('PHPSESSID', '', time() - 3600, $params['path'], $params['domain'],
-$params['secure'], $params['httponly']);
-session_destroy();                                  // Delete session file
+function logout(): void
+{
+    $_SESSION = [];
+    $params = session_get_cookie_params();
+    setcookie(session_name(), '', time() - 42000, $params['path'], $params['domain'], $params['secure'], $params['httponly']);
+    session_destroy();
+}
+
+function require_login(bool $logged_in): void
+{
+    if ($logged_in === false) {
+        header('Location: login.php');
+        exit;
     }
+}
 
 function authenticate(PDO $pdo, string $username, string $password)
     {

@@ -14,7 +14,7 @@ if (!$id) {
 }
 
 // Check edit permission task requires project membership check
-if (!can_edit_task($_SESSION['role'], $_SESSION['personID'], $id, $pdo)) {
+if (!can_edit_task($_SESSION['role'], $_SESSION['person_id'], $id, $pdo)) {
     header('Location: access_denied.php');
     exit;
 }
