@@ -97,6 +97,7 @@ function sc(string $status): string {
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
 
   <div class="ie-window">
     <div class="title-bar">

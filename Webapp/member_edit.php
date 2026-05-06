@@ -157,6 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
 
   <div class="ie-window">
     <div class="title-bar">

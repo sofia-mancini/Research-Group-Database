@@ -58,6 +58,7 @@ require_login($logged_in);
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
   <div class="ie-window">
     <div class="title-bar">
       <div class="title-bar-text">🏛️ Departments — Research Group Database — Microsoft Internet Explorer</div>
