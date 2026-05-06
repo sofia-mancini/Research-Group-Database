@@ -95,6 +95,7 @@ $proj_qs = $proj_qs_parts ? '?' . implode('&', $proj_qs_parts) : '';
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
   <div class="ie-window">
     <div class="title-bar">
       <div class="title-bar-text">📁 Projects — Research Group Database — Microsoft Internet Explorer</div>

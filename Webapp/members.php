@@ -59,6 +59,7 @@ body { font-family: "MS Sans Serif", "Microsoft Sans Serif", Tahoma, sans-serif;
 </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
 <div class="ie-window">
   <div class="title-bar">
     <div class="title-bar-text">👥 Members — Research Group Database — Microsoft Internet Explorer</div>

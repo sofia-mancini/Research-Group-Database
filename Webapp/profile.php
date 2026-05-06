@@ -463,6 +463,7 @@ require_login($logged_in);
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
 
   <!-- Desktop icons -->
   <div class="desktop-icons">

@@ -74,6 +74,7 @@ $tasks = $status_filter ? pdo($pdo, $sql, ['status' => $status_filter]) : pdo($p
   </style>
 </head>
 <body>
+<?php include 'includes/desktop_icons.php'; ?>
   <div class="ie-window">
     <div class="title-bar">
       <div class="title-bar-text">✅ Tasks — Research Group Database — Microsoft Internet Explorer</div>
